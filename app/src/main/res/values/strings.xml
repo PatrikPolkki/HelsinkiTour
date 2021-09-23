@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HelsinkiTour</string>
+
+    <string name="map_label">Map</string>
+    <string name="search_label">Search</string>
+    <string name="stats_label">Stats</string>
 </resources>
