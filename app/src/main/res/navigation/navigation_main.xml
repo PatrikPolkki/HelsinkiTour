@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/navMap">
+
+    <fragment
+        android:id="@+id/navMap"
+        android:name="fi.joonaun.helsinkitour.ui.map.MapFragment"
+        android:label="@string/map_label"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/navStats"
+        android:name="fi.joonaun.helsinkitour.ui.stats.StatsFragment"
+        android:label="@string/stats_label"
+        tools:layout="@layout/fragment_stats" />
+    <fragment
+        android:id="@+id/navSearch"
+        android:name="fi.joonaun.helsinkitour.ui.search.SearchFragment"
+        android:label="@string/search_label"
+        tools:layout="@layout/fragment_search" />
+</navigation>
