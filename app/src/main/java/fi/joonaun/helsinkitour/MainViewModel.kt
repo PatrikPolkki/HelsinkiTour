@@ -1,45 +1,60 @@
 package fi.joonaun.helsinkitour
 
-import android.content.Context
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import fi.joonaun.helsinkitour.network.Activities
+import fi.joonaun.helsinkitour.network.Events
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import fi.joonaun.helsinkitour.network.Places
 import kotlinx.coroutines.launch
 
-class MainViewModel(context: Context) : ViewModel() {
+class MainViewModel() : ViewModel() {
     private val repository: HelsinkiRepository = HelsinkiRepository()
 
-    fun getAllPlaces() {
+    private val mPlaces: MutableLiveData<Places> by lazy {
+        MutableLiveData<Places>()
+    }
+    val places: LiveData<Places>
+        get() = mPlaces
+
+    private val mEvents: MutableLiveData<Events> by lazy {
+        MutableLiveData<Events>()
+    }
+    val events: LiveData<Events>
+        get() = mEvents
+
+    private val mActivities: MutableLiveData<Activities> by lazy {
+        MutableLiveData<Activities>()
+    }
+    val activities: LiveData<Activities>
+        get() = mActivities
+
+    fun getAll(language: String = "en") {
+        getActivities(language)
+        getEvents(language)
+        getPlaces(language)
+    }
+
+    private fun getPlaces(language: String = "en") {
         viewModelScope.launch {
-            val result = repository.getAllPlaces("en")
-            Log.d("AllPlaces", "$result")
+            val result = repository.getAllPlaces(language)
+            mPlaces.postValue(result)
         }
     }
 
-    fun getAllEvents() {
+    private fun getEvents(language: String = "en") {
         viewModelScope.launch {
-            val result = repository.getAllEvents("en")
-            Log.d("AllEvents", "$result")
+            val result = repository.getAllEvents(language)
+            mEvents.postValue(result)
         }
     }
 
-    fun getAllActivities() {
+    private fun getActivities(language: String = "en") {
         viewModelScope.launch {
-            val result = repository.getAllActivities("en")
-            Log.d("AllActivities", "$result")
+            val result = repository.getAllActivities(language)
+            mActivities.postValue(result)
         }
-    }
-}
-
-class MainViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            // Sorry Patrick, but this is how Google do this
-            @Suppress("UNCHECKED_CAST")
-            return MainViewModel(context) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
