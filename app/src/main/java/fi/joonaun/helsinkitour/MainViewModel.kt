@@ -4,31 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fi.joonaun.helsinkitour.network.Activities
-import fi.joonaun.helsinkitour.network.Events
-import fi.joonaun.helsinkitour.network.HelsinkiRepository
-import fi.joonaun.helsinkitour.network.Places
+import fi.joonaun.helsinkitour.network.*
 import kotlinx.coroutines.launch
 
 class MainViewModel() : ViewModel() {
     private val repository: HelsinkiRepository = HelsinkiRepository()
 
-    private val mPlaces: MutableLiveData<Places> by lazy {
-        MutableLiveData<Places>()
+    private val mPlaces: MutableLiveData<List<Place>> by lazy {
+        MutableLiveData<List<Place>>()
     }
-    val places: LiveData<Places>
+    val places: LiveData<List<Place>>
         get() = mPlaces
 
-    private val mEvents: MutableLiveData<Events> by lazy {
-        MutableLiveData<Events>()
+    private val mEvents: MutableLiveData<List<Event>> by lazy {
+        MutableLiveData<List<Event>>()
     }
-    val events: LiveData<Events>
+    val events: LiveData<List<Event>>
         get() = mEvents
 
-    private val mActivities: MutableLiveData<Activities> by lazy {
-        MutableLiveData<Activities>()
+    private val mActivities: MutableLiveData<List<Activity>> by lazy {
+        MutableLiveData<List<Activity>>()
     }
-    val activities: LiveData<Activities>
+    val activities: LiveData<List<Activity>>
         get() = mActivities
 
     fun getAll(language: String = "en") {
@@ -40,21 +37,21 @@ class MainViewModel() : ViewModel() {
     private fun getPlaces(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllPlaces(language)
-            mPlaces.postValue(result)
+            mPlaces.postValue(result.data)
         }
     }
 
     private fun getEvents(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllEvents(language)
-            mEvents.postValue(result)
+            mEvents.postValue(result.data)
         }
     }
 
     private fun getActivities(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllActivities(language)
-            mActivities.postValue(result)
+            mActivities.postValue(result.data)
         }
     }
 }
