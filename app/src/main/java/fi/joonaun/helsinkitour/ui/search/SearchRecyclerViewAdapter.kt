@@ -1,21 +1,38 @@
 package fi.joonaun.helsinkitour.ui.search
 
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.squareup.picasso.Picasso
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.network.Activity
+import fi.joonaun.helsinkitour.network.Helsinki
 
 class SearchRecyclerViewAdapter : RecyclerView.Adapter<SearchRecyclerViewAdapter.ViewHolder>() {
 
-    val results: MutableList<Activity> = mutableListOf()
+    private val results: MutableList<Helsinki> = mutableListOf()
+
+    fun addItem(item: Helsinki) {
+        results.add(item)
+        notifyItemInserted(results.size)
+    }
+
+    fun addItems(items: List<Helsinki>) {
+        val startPos = results.size
+        results.addAll(items)
+        notifyItemRangeInserted(startPos, items.size)
+    }
+
+    fun clearItems() {
+        val size = results.size
+        results.clear()
+        notifyItemRangeRemoved(0, size)
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val img: ImageView
@@ -41,16 +58,21 @@ class SearchRecyclerViewAdapter : RecyclerView.Adapter<SearchRecyclerViewAdapter
         val item = results[position]
         holder.apply {
             txtTitle.text = item.name.en
-            txtDescription.text = item.description.intro
+            txtDescription.text = item.description.intro ?: item.description.body
         }
 
-        val image = item.description.images.firstOrNull()
+        val image = item.description.images?.firstOrNull()
         if (image != null) {
-            Picasso.get()
-                .load(image.url)
+            Picasso.get().load(image.url)
                 .fit()
-                .error(R.drawable.ic_baseline_person_24)
+                .placeholder(R.drawable.ic_baseline_downloading_24)
+                .error(R.drawable.ic_baseline_error_outline_24)
                 .into(holder.img)
+        } else {
+            holder.img.setImageDrawable(
+                ContextCompat.getDrawable(holder.itemView.context,
+                    R.drawable.ic_baseline_error_outline_24)
+            )
         }
     }
 

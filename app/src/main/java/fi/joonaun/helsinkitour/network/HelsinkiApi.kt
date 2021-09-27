@@ -11,17 +11,17 @@ object HelsinkiApi {
     interface Service {
         @GET("places/")
         suspend fun getAllPlaces(
-            @Query("language") language: String
+            @Query("language_filter") language: String
         ): Places
 
         @GET("events/")
         suspend fun getAllEvents(
-            @Query("language") language: String
+            @Query("language_filter") language: String
         ): Events
 
         @GET("activities/")
         suspend fun getAllActivities(
-            @Query("language") language: String
+            @Query("language_filter") language: String
         ): Activities
     }
 

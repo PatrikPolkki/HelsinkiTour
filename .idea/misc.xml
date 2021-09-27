@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_downloading_24.xml" value="0.31574074074074077" />
         <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.17447916666666666" />
+        <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/drawable/loading.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/drawable/loading_icon.xml" value="0.17447916666666666" />
         <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/drawable/loading_spinner.xml" value="0.17447916666666666" />
         <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/layout/activity_main.xml" value="0.329417773237998" />

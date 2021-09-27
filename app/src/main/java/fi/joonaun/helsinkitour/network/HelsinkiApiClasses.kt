@@ -31,7 +31,7 @@ data class LicenseType(
     val name: String
 )
 
-data class Images(
+data class Image(
     val url: String,
     @SerializedName("copyright_holder") val copyrightHolder: String,
     @SerializedName("license_type") val licenseType: LicenseType
@@ -40,7 +40,7 @@ data class Images(
 data class Description(
     val intro: String?,
     val body: String,
-    val images: List<Images>
+    val images: List<Image>?
 )
 
 data class Tags(
@@ -50,6 +50,16 @@ data class Tags(
 
 //endregion
 
+interface Helsinki {
+    val id: String
+    val name: Name
+    val infoUrl: String
+    val modifiedAt: String
+    val location: Location
+    val description: Description
+    val tags: List<Tags>
+}
+
 //region Events
 
 data class Events(
@@ -58,15 +68,15 @@ data class Events(
 )
 
 data class Event(
-    val id: String,
-    val name: Name,
-    @SerializedName("info_url") val infoUrl: String,
-    @SerializedName("modified_at") val modifiedAt: String,
-    val location: Location,
-    val description: Description,
-    val tags: List<Tags>,
+    override val id: String,
+    override val name: Name,
+    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("modified_at") override val modifiedAt: String,
+    override val location: Location,
+    override val description: Description,
+    override val tags: List<Tags>,
     @SerializedName("event_dates") val eventDates: EventDates
-)
+) : Helsinki
 
 data class EventDates(
     @SerializedName("starting_day") val startingDay: String,
@@ -84,15 +94,15 @@ data class Activities(
 )
 
 data class Activity(
-    val id: String,
-    val name: Name,
-    @SerializedName("info_url") val infoUrl: String,
-    @SerializedName("modified_at") val modifiedAt: String,
-    val location: Location,
-    val description: Description,
-    val tags: List<Tags>,
+    override val id: String,
+    override val name: Name,
+    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("modified_at") override val modifiedAt: String,
+    override val location: Location,
+    override val description: Description,
+    override val tags: List<Tags>,
     @SerializedName("where_when_duration") val whereWhenDuration: WhereWhenDuration
-)
+) : Helsinki
 
 data class WhereWhenDuration(
     @SerializedName("where_and_when") val whereAndWhen: String,
@@ -109,15 +119,15 @@ data class Places(
 )
 
 data class Place(
-    val id: String,
-    val name: Name,
-    @SerializedName("info_url") val infoUrl: String,
-    @SerializedName("modified_at") val modifiedAt: String,
-    val location: Location,
-    val description: Description,
-    val tags: List<Tags>,
+    override val id: String,
+    override val name: Name,
+    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("modified_at") override val modifiedAt: String,
+    override val location: Location,
+    override val description: Description,
+    override val tags: List<Tags>,
     @SerializedName("opening_hours") val openingHours: OpeningHours
-)
+) : Helsinki
 
 data class OpeningHours(
     val hours: List<Hours>,
