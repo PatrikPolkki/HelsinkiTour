@@ -9,19 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButtonToggleGroup
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentSearchBinding
-import fi.joonaun.helsinkitour.network.Activities
-import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Helsinki
+import fi.joonaun.helsinkitour.ui.search.bottomsheet.InfoBottomSheet
 
 class SearchFragment : Fragment(R.layout.fragment_search),
-    MaterialButtonToggleGroup.OnButtonCheckedListener {
+    MaterialButtonToggleGroup.OnButtonCheckedListener, CellClickListener {
     private val viewModel: SearchViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentSearchBinding
@@ -69,10 +67,20 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         }
     }
 
+    override fun onCellClickListener(id: String, typeId: Int) {
+        Log.d("CELL", "Cell clicked")
+        val modalSheet = InfoBottomSheet()
+        val bundle = Bundle()
+        bundle.putString("id", id)
+        bundle.putInt("type", typeId)
+        modalSheet.arguments = bundle
+        modalSheet.show(parentFragmentManager, modalSheet.tag)
+    }
+
     private fun initUI() {
         binding.rvResults.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = SearchRecyclerViewAdapter()
+            adapter = SearchRecyclerViewAdapter(this@SearchFragment)
         }
         binding.searchButtonGroup.addOnButtonCheckedListener(this)
     }
