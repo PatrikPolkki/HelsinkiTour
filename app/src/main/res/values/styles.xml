@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SubtitleStyle" parent="android:TextAppearance.Material.Small">
+        <item name="android:textSize">@dimen/subtitle_size</item>
+        <item name="android:layout_marginBottom">@dimen/subtitle_margin_bottom</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="SublayoutStyle">
+        <item name="android:layout_marginTop">@dimen/sublayout_margin_top</item>
+    </style>
+</resources>

@@ -5,13 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
-import fi.joonaun.helsinkitour.network.Helsinki
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
@@ -32,7 +28,7 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
 
     private fun initUI() {
         val id = arguments?.get("id") as String
-        val list = when((arguments?.get("type") as Int)) {
+        val list = when ((arguments?.get("type") as Int)) {
             1 -> mainViewModel.events
             2 -> mainViewModel.places
             3 -> mainViewModel.activities

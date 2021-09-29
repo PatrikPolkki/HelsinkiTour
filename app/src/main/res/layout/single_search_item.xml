@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="helsinkiItem"
             type="fi.joonaun.helsinkitour.network.Helsinki" />
@@ -48,10 +49,10 @@
             android:layout_marginEnd="8dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:title="@{helsinkiItem.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"
             app:layout_constraintTop_toTopOf="parent"
+            app:title="@{helsinkiItem.name}"
             tools:text="Title here" />
 
         <TextView
@@ -64,7 +65,7 @@
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="3"
-            app:shortDescription="@{helsinkiItem.description}"
+            android:text="@{helsinkiItem.description.intro ?? helsinkiItem.description.body}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"

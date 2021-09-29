@@ -58,7 +58,7 @@ data class SourceType(
 interface Helsinki {
     val id: String
     val name: Name
-    val infoUrl: String
+    val infoUrl: String?
     val modifiedAt: String
     val location: Location
     val description: Description
@@ -76,7 +76,7 @@ data class Events(
 data class Event(
     override val id: String,
     override val name: Name,
-    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("info_url") override val infoUrl: String?,
     @SerializedName("modified_at") override val modifiedAt: String,
     override val location: Location,
     override val description: Description,
@@ -103,7 +103,7 @@ data class Activities(
 data class Activity(
     override val id: String,
     override val name: Name,
-    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("info_url") override val infoUrl: String?,
     @SerializedName("modified_at") override val modifiedAt: String,
     override val location: Location,
     override val description: Description,
@@ -113,8 +113,8 @@ data class Activity(
 ) : Helsinki
 
 data class WhereWhenDuration(
-    @SerializedName("where_and_when") val whereAndWhen: String,
-    val duration: String
+    @SerializedName("where_and_when") val whereAndWhen: String?,
+    val duration: String?
 )
 
 //endregion
@@ -129,7 +129,7 @@ data class Places(
 data class Place(
     override val id: String,
     override val name: Name,
-    @SerializedName("info_url") override val infoUrl: String,
+    @SerializedName("info_url") override val infoUrl: String?,
     @SerializedName("modified_at") override val modifiedAt: String,
     override val location: Location,
     override val description: Description,
