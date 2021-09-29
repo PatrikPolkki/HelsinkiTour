@@ -1,5 +1,6 @@
 package fi.joonaun.helsinkitour
 
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,9 @@ class MainViewModel() : ViewModel() {
     private fun getPlaces(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllPlaces(language)
+            result.data.forEach {
+                it.description.body = parseHtml(it.description.body)
+            }
             mPlaces.postValue(result.data)
         }
     }
@@ -44,6 +48,9 @@ class MainViewModel() : ViewModel() {
     private fun getEvents(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllEvents(language)
+            result.data.forEach {
+                it.description.body = parseHtml(it.description.body)
+            }
             mEvents.postValue(result.data)
         }
     }
@@ -51,7 +58,17 @@ class MainViewModel() : ViewModel() {
     private fun getActivities(language: String = "en") {
         viewModelScope.launch {
             val result = repository.getAllActivities(language)
+            result.data.forEach {
+                it.description.body = parseHtml(it.description.body)
+            }
             mActivities.postValue(result.data)
         }
+    }
+
+    private fun parseHtml(text: String): String {
+        var result = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+        result = result.replace("\n", "\n\n")
+        result.trim()
+        return result
     }
 }
