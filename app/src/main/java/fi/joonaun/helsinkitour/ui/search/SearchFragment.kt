@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButtonToggleGroup
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
@@ -42,7 +41,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         checkedId: Int,
         isChecked: Boolean
     ) {
-        when(checkedId) {
+        when (checkedId) {
             R.id.groupBtnActivities -> {
                 if (isChecked) {
                     mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)

@@ -2,9 +2,7 @@ package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.SingleImageBinding
 import fi.joonaun.helsinkitour.network.Image
 
