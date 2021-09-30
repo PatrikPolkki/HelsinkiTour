@@ -50,14 +50,18 @@ class SearchViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.Default + searchJob) {
             val result = when (selectedType.value) {
                 HelsinkiType.ACTIVITY -> repository.getAllActivities().data
-                    .filter { it.name.toString().lowercase().contains(searchText) }
+                    .filter { stringMatch(it.getLocaleName(), searchText) }
                 HelsinkiType.EVENT -> repository.getAllEvents().data
-                    .filter { it.name.toString().lowercase().contains(searchText) }
+                    .filter { stringMatch(it.getLocaleName(), searchText) }
                 HelsinkiType.PLACE -> repository.getAllPlaces().data
-                    .filter { it.name.toString().lowercase().contains(searchText) }
+                    .filter { stringMatch(it.getLocaleName(), searchText) }
                 else -> listOf()
             }
             mSearchResults.postValue(result)
         }
+    }
+
+    private fun stringMatch(str: String?, input: String): Boolean {
+        return str?.lowercase()?.contains(input) ?: false
     }
 }

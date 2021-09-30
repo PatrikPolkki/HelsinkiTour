@@ -19,15 +19,8 @@ import fi.joonaun.helsinkitour.utils.HelsinkiType
 class SearchFragment : Fragment(R.layout.fragment_search),
     MaterialButtonToggleGroup.OnButtonCheckedListener, CellClickListener {
 
-    companion object {
-        private const val MINIMUM_SCROLL_DISTANCE = 25
-    }
-
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var binding: FragmentSearchBinding
-
-    private var searchVisible = true
-    private var scrollDistance = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,

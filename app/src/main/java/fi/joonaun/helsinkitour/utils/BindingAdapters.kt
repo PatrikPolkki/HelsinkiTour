@@ -29,11 +29,6 @@ fun bindShowImages(view: View, images: List<Image>?) {
     }
 }
 
-@BindingAdapter(value = ["title", "locale"], requireAll = false)
-fun bindShowLocaledTitle(view: TextView, name: Name, locale: String?) {
-    view.text = if (locale == "fi") name.fi else name.en
-}
-
 @BindingAdapter("imageIfExist")
 fun bindShowImageOrPlaceholder(view: ImageView, images: List<Image>?) {
     if (images == null || images.isEmpty()) {
