@@ -6,22 +6,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButtonToggleGroup
-import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentSearchBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.search.bottomsheet.InfoBottomSheet
+import fi.joonaun.helsinkitour.utils.HelsinkiType
 
 class SearchFragment : Fragment(R.layout.fragment_search),
     MaterialButtonToggleGroup.OnButtonCheckedListener, CellClickListener {
+
+    companion object {
+        private const val MINIMUM_SCROLL_DISTANCE = 25
+    }
+
     private val viewModel: SearchViewModel by viewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentSearchBinding
+
+    private var searchVisible = true
+    private var scrollDistance = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,9 +35,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         initUI()
-        initFirstObserver()
+        initObservers()
 
         return binding.root
     }
@@ -42,27 +50,9 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         isChecked: Boolean
     ) {
         when (checkedId) {
-            R.id.groupBtnActivities -> {
-                if (isChecked) {
-                    mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
-                } else {
-                    mainViewModel.activities.removeObservers(viewLifecycleOwner)
-                }
-            }
-            R.id.groupBtnEvents -> {
-                if (isChecked) {
-                    mainViewModel.events.observe(viewLifecycleOwner, helsinkiObserver)
-                } else {
-                    mainViewModel.events.removeObservers(viewLifecycleOwner)
-                }
-            }
-            R.id.groupBtnPlaces -> {
-                if (isChecked) {
-                    mainViewModel.places.observe(viewLifecycleOwner, helsinkiObserver)
-                } else {
-                    mainViewModel.places.removeObservers(viewLifecycleOwner)
-                }
-            }
+            R.id.groupBtnActivities -> if (isChecked) viewModel.setSelectedType(HelsinkiType.ACTIVITY)
+            R.id.groupBtnEvents -> if (isChecked) viewModel.setSelectedType(HelsinkiType.EVENT)
+            R.id.groupBtnPlaces -> if (isChecked) viewModel.setSelectedType(HelsinkiType.PLACE)
         }
     }
 
@@ -84,8 +74,9 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         binding.searchButtonGroup.addOnButtonCheckedListener(this)
     }
 
-    private fun initFirstObserver() {
-        mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
+    private fun initObservers() {
+        viewModel.searchResults.observe(viewLifecycleOwner, helsinkiObserver)
+        viewModel.selectedType.observe(viewLifecycleOwner, typeObserver)
     }
 
     private val helsinkiObserver = Observer<List<Helsinki>> {
@@ -94,4 +85,6 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         adapter.clearItems()
         adapter.addItems(it)
     }
+
+    private val typeObserver = Observer<HelsinkiType> { viewModel.doSearch() }
 }
