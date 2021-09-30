@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_label">Kartta</string>
+    <string name="search_label">Haku</string>
+    <string name="stats_label">Tilastot</string>
+    <string name="activities">Aktiviteetit</string>
+    <string name="events">Tapahtumat</string>
+    <string name="places">Paikat</string>
+    <string name="hint_search">Mitä haluat etsiä?</string>
+    <string name="images">Kuvat</string>
+    <string name="event_dates_title">Tapahtuman aika</string>
+    <string name="duration">Kesto</string>
+    <string name="address">Osoite</string>
+    <string name="more_info">Lisätietoa</string>
+    <string name="opening_hours_title">Aukioloajat</string>
+    <string name="monday">Maanantai</string>
+    <string name="tuesday">Tiistai</string>
+    <string name="wednesday">Keskiviikko</string>
+    <string name="thursday">Torstai</string>
+    <string name="friday">Perjantai</string>
+    <string name="saturday">Lauantai</string>
+    <string name="sunday">Sunnuntai</string>
+    <string name="closed">Suljettu</string>
+    <string name="open_24">Auki 24h</string>
+</resources>
