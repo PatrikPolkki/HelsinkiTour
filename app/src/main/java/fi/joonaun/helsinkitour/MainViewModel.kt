@@ -41,9 +41,6 @@ class MainViewModel() : ViewModel() {
     private fun getPlaces() {
         viewModelScope.launch {
             val result = repository.getAllPlaces()
-            result.data.forEach {
-                it.description.body = parseHtml(it.description.body)
-            }
             mPlaces.postValue(result.data)
         }
     }
