@@ -1,6 +1,7 @@
 package fi.joonaun.helsinkitour.network
 
 import com.google.gson.annotations.SerializedName
+import java.util.Locale
 
 //region Generic data classes
 
@@ -64,6 +65,8 @@ interface Helsinki {
     val description: Description
     val tags: List<Tags>
     val sourceType: SourceType
+
+    fun getLocaleName() = if(Locale.getDefault().language == "fi") name.fi else name.en
 }
 
 //region Events
@@ -83,6 +86,7 @@ data class Event(
     override val tags: List<Tags>,
     @SerializedName("source_type") override val sourceType: SourceType,
     @SerializedName("event_dates") val eventDates: EventDates
+
 ) : Helsinki
 
 data class EventDates(

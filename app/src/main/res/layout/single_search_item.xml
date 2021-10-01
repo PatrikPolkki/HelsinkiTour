@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@{helsinkiItem.name}"
+            android:text="@{helsinkiItem.getLocaleName()}"
             tools:text="Title here" />
 
         <TextView

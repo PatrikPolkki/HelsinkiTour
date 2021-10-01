@@ -1,15 +1,18 @@
 package fi.joonaun.helsinkitour
 
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fi.joonaun.helsinkitour.network.*
+import fi.joonaun.helsinkitour.network.Activity
+import fi.joonaun.helsinkitour.network.Event
+import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import fi.joonaun.helsinkitour.network.Place
+import fi.joonaun.helsinkitour.utils.parseHtml
 import kotlinx.coroutines.launch
 
 class MainViewModel() : ViewModel() {
-    private val repository: HelsinkiRepository = HelsinkiRepository()
+    private val repository: HelsinkiRepository = HelsinkiRepository
 
     private val mPlaces: MutableLiveData<List<Place>> by lazy {
         MutableLiveData<List<Place>>()
@@ -29,46 +32,30 @@ class MainViewModel() : ViewModel() {
     val activities: LiveData<List<Activity>>
         get() = mActivities
 
-    fun getAll(language: String = "en") {
-        getActivities(language)
-        getEvents(language)
-        getPlaces(language)
+    fun getAll() {
+        getActivities()
+        getEvents()
+        getPlaces()
     }
 
-    private fun getPlaces(language: String = "en") {
+    private fun getPlaces() {
         viewModelScope.launch {
-            val result = repository.getAllPlaces(language)
-            result.data.forEach {
-                it.description.body = parseHtml(it.description.body)
-            }
+            val result = repository.getAllPlaces()
             mPlaces.postValue(result.data)
         }
     }
 
-    private fun getEvents(language: String = "en") {
+    private fun getEvents() {
         viewModelScope.launch {
-            val result = repository.getAllEvents(language)
-            result.data.forEach {
-                it.description.body = parseHtml(it.description.body)
-            }
+            val result = repository.getAllEvents()
             mEvents.postValue(result.data)
         }
     }
 
-    private fun getActivities(language: String = "en") {
+    private fun getActivities() {
         viewModelScope.launch {
-            val result = repository.getAllActivities(language)
-            result.data.forEach {
-                it.description.body = parseHtml(it.description.body)
-            }
+            val result = repository.getAllActivities()
             mActivities.postValue(result.data)
         }
-    }
-
-    private fun parseHtml(text: String): String {
-        var result = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-        result = result.replace("\n", "\n\n")
-        result.trim()
-        return result
     }
 }
