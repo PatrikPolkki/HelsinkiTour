@@ -1,11 +1,30 @@
 package fi.joonaun.helsinkitour.ui.map
 
+import android.util.Log
 import android.widget.Button
 import fi.joonaun.helsinkitour.R
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.events.MapListener
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 
-class MarkerWindow(mapView: MapView): InfoWindow(R.layout.info_window, mapView) {
+class MarkerWindow(mapView: MapView):  InfoWindow(R.layout.info_window, mapView) {
+
+    private val mapListener = MapEventsOverlay(object  : MapEventsReceiver {
+        override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+            close()
+            return true
+        }
+
+        override fun longPressHelper(p: GeoPoint?): Boolean {
+            Log.d("LONGPRESS", true.toString())
+            return true
+        }
+    })
+
     override fun onOpen(item: Any?) {
         // Following command
         closeAllInfoWindowsOn(mapView)
@@ -14,6 +33,8 @@ class MarkerWindow(mapView: MapView): InfoWindow(R.layout.info_window, mapView) 
 
         val moveButton = mView.findViewById<Button>(R.id.move_button)
         val deleteButton = mView.findViewById<Button>(R.id.delete_button)
+
+        mMapView.overlays.add(mapListener)
 
         moveButton.setOnClickListener {
             // How to create a moveMarkerMapListener is not covered here.
@@ -47,7 +68,8 @@ class MarkerWindow(mapView: MapView): InfoWindow(R.layout.info_window, mapView) 
     }
 
     override fun onClose() {
-        TODO("Not yet implemented")
+        Log.d("ONCLOSE", "TOIMII")
+        mMapView.overlays.remove(mapListener)
     }
 
 }
