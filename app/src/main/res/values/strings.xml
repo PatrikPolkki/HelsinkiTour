@@ -30,4 +30,5 @@
     <string name="opening_hours" translatable="false">%s-%s</string>
     <string name="closed">Closed</string>
     <string name="open_24">Open 24h</string>
+    <string name="favorite">Favorite</string>
 </resources>

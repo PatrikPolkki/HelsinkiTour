@@ -8,6 +8,9 @@
         <variable
             name="helsinkiItem"
             type="fi.joonaun.helsinkitour.network.Helsinki" />
+        <variable
+            name="viewModel"
+            type="fi.joonaun.helsinkitour.ui.search.bottomsheet.InfoBottomSheetViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -20,6 +23,22 @@
             android:orientation="vertical"
             android:padding="8dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <LinearLayout
+                style="@style/SublayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:favorite="@{viewModel.favorite != null ? true : false}"
+                    android:text="@string/favorite"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    app:icon="@drawable/ic_baseline_star_24" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/txtTitle"

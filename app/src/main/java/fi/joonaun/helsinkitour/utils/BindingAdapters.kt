@@ -3,11 +3,13 @@ package fi.joonaun.helsinkitour.utils
 import android.content.Context
 import android.text.util.Linkify
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.network.*
@@ -154,6 +156,15 @@ fun bindHours(view: TextView, item: Helsinki) {
     }
 
     view.text = text
+}
+
+@BindingAdapter("favorite")
+fun bindFavorite(view: MaterialButton, favorite: Boolean) {
+    if(favorite) {
+        view.setIconResource(R.drawable.ic_baseline_check_24)
+    } else {
+        view.setIconResource(R.drawable.ic_baseline_star_24)
+    }
 }
 
 private fun getWeekday(id: Int, context: Context): String {

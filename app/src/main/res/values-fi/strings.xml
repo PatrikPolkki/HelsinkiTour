@@ -22,4 +22,5 @@
     <string name="sunday">Sunnuntai</string>
     <string name="closed">Suljettu</string>
     <string name="open_24">Auki 24h</string>
+    <string name="favorite">Suosikki</string>
 </resources>
