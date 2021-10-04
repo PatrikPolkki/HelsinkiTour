@@ -1,17 +1,25 @@
 package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import fi.joonaun.helsinkitour.MainViewModel
+import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val viewModel: InfoBottomSheetViewModel by viewModels {
+        InfoBottomSheetViewModelFactory(requireContext(), arguments?.get("id") as String)
+    }
     private lateinit var binding: ModalSheetInfoBinding
 
     override fun onCreateView(
@@ -21,6 +29,7 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
     ): View {
         binding = ModalSheetInfoBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         initUI()
 
@@ -37,6 +46,24 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
         }
         val item = list.value?.find { it.id == id } ?: return
         binding.helsinkiItem = item
+        viewModel.setHelsinkiItem(item)
+        viewModel.favorite.observe(this, favoriteObserver)
     }
 
+    private val favoriteObserver = Observer<Favorite?> {
+        if(it == null) {
+            binding.btnFavorite.setOnClickListener(addFavoriteAction)
+        }
+        else {
+            binding.btnFavorite.setOnClickListener(removeFavoriteAction)
+        }
+    }
+
+    private val addFavoriteAction = View.OnClickListener {
+        viewModel.addFavourite()
+    }
+
+    private val removeFavoriteAction = View.OnClickListener {
+        viewModel.deleteFavorite()
+    }
 }
