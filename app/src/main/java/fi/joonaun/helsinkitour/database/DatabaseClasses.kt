@@ -1,5 +1,6 @@
 package fi.joonaun.helsinkitour.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import fi.joonaun.helsinkitour.utils.HelsinkiType
@@ -10,4 +11,11 @@ data class Favorite(
     val type: HelsinkiType,
     val name: String,
     val imageUrl: String?
+)
+
+@Entity
+data class Stat(
+    @PrimaryKey val date: String,
+    val steps: Int = 0,
+    @ColumnInfo(name = "distance_travelled") val distanceTravelled: Int = 0
 )
