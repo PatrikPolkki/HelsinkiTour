@@ -167,6 +167,12 @@ fun bindFavorite(view: MaterialButton, favorite: Boolean) {
     }
 }
 
+@BindingAdapter("totalSteps")
+fun bindTotalSteps(view: TextView, steps: Int?) {
+    val text = view.context.getString(R.string.step_count, steps ?: 0)
+    view.text = text
+}
+
 private fun getWeekday(id: Int, context: Context): String {
     return when (id) {
         1 -> context.getString(R.string.monday)

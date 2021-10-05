@@ -1,18 +1,21 @@
 package fi.joonaun.helsinkitour
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import android.util.Log
+import androidx.lifecycle.*
+import fi.joonaun.helsinkitour.database.AppDatabase
+import fi.joonaun.helsinkitour.database.Stat
 import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.network.Place
-import fi.joonaun.helsinkitour.utils.parseHtml
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(context: Context) : ViewModel() {
     private val repository: HelsinkiRepository = HelsinkiRepository
+    private val database = AppDatabase.get(context)
 
     private val mPlaces: MutableLiveData<List<Place>> by lazy {
         MutableLiveData<List<Place>>()
@@ -31,6 +34,10 @@ class MainViewModel() : ViewModel() {
     }
     val activities: LiveData<List<Activity>>
         get() = mActivities
+
+    private var stats: Stat? = null
+
+    var stepsBegin: Int? = null
 
     fun getAll() {
         getActivities()
@@ -57,5 +64,34 @@ class MainViewModel() : ViewModel() {
             val result = repository.getAllActivities()
             mActivities.postValue(result.data)
         }
+    }
+
+    fun addStatsIfNotExist() {
+        viewModelScope.launch {
+            val today = Calendar.getInstance().time
+            val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val date = formatter.format(today)
+            val newStat = Stat(date)
+            val id = database.statDao().insert(newStat)
+            stats = if(id == -1L) database.statDao().get(date) else newStat
+        }
+    }
+
+    fun updateSteps(amount: Int) {
+        viewModelScope.launch {
+            stats?.let {
+                database.statDao().updateSteps(amount, it.date)
+            }
+        }
+    }
+}
+
+class MainViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MainViewModel(context) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
