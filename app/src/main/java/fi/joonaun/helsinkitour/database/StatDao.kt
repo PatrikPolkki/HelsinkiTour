@@ -1,5 +1,6 @@
 package fi.joonaun.helsinkitour.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,4 +19,7 @@ interface StatDao {
 
     @Query("UPDATE stat SET distance_travelled = distance_travelled + :amount WHERE date = :date")
     suspend fun updateDistanceTravelled(amount: Int, date: String)
+
+    @Query("SELECT SUM(steps) FROM stat")
+    fun getTotalSteps(): LiveData<Int?>
 }
