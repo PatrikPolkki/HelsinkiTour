@@ -54,7 +54,7 @@ class MyMarkerWindow(mapView: MapView) : InfoWindow(R.layout.info_window, mapVie
         val bubbleReadMore = mView.findViewById<Button>(R.id.readMoreButton)
 
         bubbleReadMore.setOnClickListener {
-            view.findNavController().navigate()
+           // view.findNavController().navigate()
         }
 
         mView.setOnClickListener {
