@@ -47,18 +47,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onStart() {
         super.onStart()
-        Log.d("ACTIVITY", "OnStart")
+        registerSensor()
     }
 
     override fun onStop() {
         super.onStop()
-        sm?.unregisterListener(this)
+//        sm?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event ?: return
 
         if (event.sensor == sStepCounter) {
+            Log.d("SENSOR", "Steps: ${event.values[0]}")
             if (mainViewModel.stepsBegin == null) mainViewModel.stepsBegin = event.values[0].toInt()
 
             mainViewModel.stepsBegin?.let {
@@ -95,11 +96,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     this,
                     it
                 ) == PackageManager.PERMISSION_GRANTED
-            } -> Log.d("PERMISSION", "We have all permissions")
+            } -> allPermissionsGranted()
             else -> requestPermissionLauncher.launch(permissionArray)
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) initSensor()
+    }
+
+    private fun allPermissionsGranted() {
+        initSensor()
     }
 
     private fun registerSensor() {
