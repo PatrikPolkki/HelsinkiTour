@@ -129,7 +129,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             }
             binding.map.apply {
                 overlays.add(allMarkers)
-                //displays the marker as soon as it has been added.
+                // displays the marker as soon as it has been added.
                 invalidate()
             }
 

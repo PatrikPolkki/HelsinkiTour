@@ -11,7 +11,11 @@ import androidx.navigation.findNavController
 import fi.joonaun.helsinkitour.BR
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
+import fi.joonaun.helsinkitour.network.Activity
+import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
+import fi.joonaun.helsinkitour.network.Place
+import fi.joonaun.helsinkitour.utils.HelsinkiType
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.util.GeoPoint
@@ -54,7 +58,15 @@ class MyMarkerWindow(mapView: MapView) : InfoWindow(R.layout.info_window, mapVie
         val bubbleReadMore = mView.findViewById<Button>(R.id.readMoreButton)
 
         bubbleReadMore.setOnClickListener {
-           // view.findNavController().navigate()
+            val type = when(selectedMarker) {
+                is Event -> HelsinkiType.EVENT
+                is Activity -> HelsinkiType.ACTIVITY
+                is Place -> HelsinkiType.PLACE
+                else -> return@setOnClickListener
+            }
+
+           val action = MapFragmentDirections.actionNavMapToInfoActivity(selectedMarker.id, type)
+            mView.findNavController().navigate(action)
         }
 
         mView.setOnClickListener {
