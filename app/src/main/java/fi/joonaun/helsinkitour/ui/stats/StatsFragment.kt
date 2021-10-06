@@ -21,7 +21,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStatsBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         return binding.root

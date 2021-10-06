@@ -28,7 +28,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         initUI()

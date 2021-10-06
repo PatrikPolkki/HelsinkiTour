@@ -95,11 +95,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     this,
                     it
                 ) == PackageManager.PERMISSION_GRANTED
-            } -> Log.d("PERMISSION", "We have all permissions")
+            } -> allPermissionsGranted()
             else -> requestPermissionLauncher.launch(permissionArray)
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) initSensor()
+    }
+
+    private fun allPermissionsGranted() {
+        initSensor()
     }
 
     private fun registerSensor() {
