@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onStart() {
         super.onStart()
-        Log.d("ACTIVITY", "OnStart")
+        registerSensor()
     }
 
     override fun onStop() {
