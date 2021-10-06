@@ -1,13 +1,14 @@
 package fi.joonaun.helsinkitour.network
 
+import android.util.Log
 import fi.joonaun.helsinkitour.utils.parseHtml
 import java.util.*
 
 object HelsinkiRepository {
     private val call = HelsinkiApi.service
-    private lateinit var activities: Activities
-    private lateinit var events: Events
-    private lateinit var places: Places
+    private var activities: Activities? = null
+    private var events: Events? = null
+    private var places: Places? = null
     private val language: String
 
     init {
@@ -15,35 +16,47 @@ object HelsinkiRepository {
     }
 
     suspend fun getAllPlaces(): Places {
-        if (!this::places.isInitialized) {
-            places = call.getAllPlaces(language)
-            places.data.forEach {
-                it.description.body = parseHtml(it.description.body)
+        if (places == null) {
+            try {
+                places = call.getAllPlaces(language)
+                places?.data?.forEach {
+                    it.description.body = parseHtml(it.description.body)
+                }
+            } catch (e: Exception) {
+                Log.e("PLACES", e.toString())
             }
         }
 
-        return places
+        return places ?: Places(Meta(0, null), emptyList())
     }
 
     suspend fun getAllEvents(): Events {
-        if (!this::events.isInitialized) {
-            events = call.getAllEvents(language)
-            events.data.forEach {
-                it.description.body = parseHtml(it.description.body)
+        if (events == null) {
+            try {
+                events = call.getAllEvents(language)
+                events?.data?.forEach {
+                    it.description.body = parseHtml(it.description.body)
+                }
+            } catch (e: Exception) {
+                Log.e("EVENTS", e.toString())
             }
         }
 
-        return events
+        return events ?: Events(Meta(0, null), emptyList())
     }
 
     suspend fun getAllActivities(): Activities {
-        if (!this::activities.isInitialized) {
-            activities = call.getAllActivities(language)
-            activities.data.forEach {
-                it.description.body = parseHtml(it.description.body)
+        if (activities == null) {
+            try {
+                activities = call.getAllActivities(language)
+                activities?.data?.forEach {
+                    it.description.body = parseHtml(it.description.body)
+                }
+            } catch (e: Exception) {
+                Log.e("ACTIVITIES", e.toString())
             }
         }
 
-        return activities
+        return activities ?: Activities(Meta(0, null), emptyList())
     }
 }
