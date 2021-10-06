@@ -52,13 +52,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onStop() {
         super.onStop()
-        sm?.unregisterListener(this)
+//        sm?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event ?: return
 
         if (event.sensor == sStepCounter) {
+            Log.d("SENSOR", "Steps: ${event.values[0]}")
             if (mainViewModel.stepsBegin == null) mainViewModel.stepsBegin = event.values[0].toInt()
 
             mainViewModel.stepsBegin?.let {
