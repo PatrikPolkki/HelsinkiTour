@@ -9,7 +9,11 @@
         android:id="@+id/navMap"
         android:name="fi.joonaun.helsinkitour.ui.map.MapFragment"
         android:label="@string/map_label"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_navMap_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navStats"
         android:name="fi.joonaun.helsinkitour.ui.stats.StatsFragment"
@@ -20,4 +24,9 @@
         android:name="fi.joonaun.helsinkitour.ui.search.SearchFragment"
         android:label="@string/search_label"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="fi.joonaun.helsinkitour.ui.map.infofragment.InfoFragment"
+        android:label="InfoFragment"
+        tools:layout="@layout/fragment_info"/>
 </navigation>

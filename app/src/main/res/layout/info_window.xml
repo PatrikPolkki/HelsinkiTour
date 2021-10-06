@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="helsinkiItem"
+            type="fi.joonaun.helsinkitour.network.Helsinki" />
+    </data>
+<LinearLayout
     android:id="@+id/bubble_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bonuspack_bubble"
-    android:backgroundTint="#E1C8C5C5"
+    android:backgroundTint="#E1F8F8F8"
+
     android:orientation="vertical"
     android:paddingBottom="19dp">
 
@@ -25,18 +34,44 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="240dp"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="4dp">
 
-                <TextView
-                    android:id="@+id/bubble_title"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Kaffecentralen Fredrikinkatu "
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/bubble_title"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:gravity="center_vertical"
+                        tools:text="Kaffecentralen Fredrikinkatu "
+                        android:text="@{helsinkiItem.getLocaleName()}"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/materialCheckBox"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/materialCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/sl_favourite_24dp"
+                        android:buttonTint="#808080"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/bubble_title"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/divider"
@@ -46,14 +81,62 @@
                     android:layout_marginBottom="4dp"
                     android:background="?android:attr/listDivider" />
 
-                <TextView
-                    android:id="@+id/bubble_des"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="4"
-                    android:text="Kaffecentralen is a Finnish company specialised in espresso coffee and -machines. Espresso based coffee drinks to go or to enjoy at the shop."
-                    android:textSize="12sp" />
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/materialTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:gravity="center_vertical"
+                            android:text="Description"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/readMoreButton"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.87" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/readMoreButton"
+                            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="10dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="12dp"
+                            android:paddingBottom="2dp"
+                            android:text="Read More"
+                            android:textColor="#808080"
+                            android:textSize="12sp"
+                            app:icon="@drawable/ic_baseline_arrow_forward_ios_24"
+                            app:iconGravity="end"
+                            app:iconPadding="2dp"
+                            app:iconTint="#808080"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/materialTextView"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/bubble_des"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="8"
+                        tools:text="Kaffecentralen is a Finnish company specialised in espresso coffee and -machines. Espresso based coffee drinks to go or to enjoy at the shop."
+                        android:text="@{helsinkiItem.description.intro ?? helsinkiItem.description.body}"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
 
                 <View
                     android:id="@+id/divider2"
@@ -74,14 +157,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Address"
-                        android:textSize="10sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/bubble_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Address"
-                        android:textSize="12sp" />
+                        tools:text="Address"
+                        app:address="@{helsinkiItem.location.address}"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <View
@@ -103,17 +187,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="More Info"
-                        android:textSize="10sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/bubble_url"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="bubble_url"
-                        android:autoLink="web"
-                        android:clickable="true"
-                        android:textColorLink="#2F1E88"
-                        android:textSize="12sp" />
+                        tools:text="bubble_url"
+                        app:url="@{helsinkiItem.infoUrl}"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -121,3 +203,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
+</layout>

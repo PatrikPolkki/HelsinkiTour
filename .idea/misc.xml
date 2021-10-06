@@ -17,13 +17,16 @@
         <entry key="..\:/Users/jopak/Documents/Code projects/HelsinkiTour/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.329417773237998" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_downloading_24.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_error_outline_24.xml" value="0.14166666666666666" />
+        <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.2638888888888889" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14166666666666666" />
+        <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/drawable/sl_favourite_24dp.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/fragment_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/fragment_map.xml" value="0.2" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/fragment_search.xml" value="0.2046875" />
-        <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/info_window.xml" value="0.4839124839124839" />
+        <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/info_window.xml" value="0.536" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/modal_sheet_filter.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/patep/AndroidStudioProjects/HelsinkiTour/app/src/main/res/layout/modal_sheet_info.xml" value="0.25416666666666665" />
       </map>
