@@ -45,7 +45,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private lateinit var binding: FragmentMapBinding
     lateinit var locationManager: LocationManager
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var marker: Marker
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +59,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         ActivityCompat.requestPermissions(
             requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACTIVITY_RECOGNITION), 0
         )
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -107,11 +106,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
             val allMarkers = RadiusMarkerClusterer(requireContext())
+            val myInfoWindow = MyMarkerWindow(binding.map)
 
             pointInfo.forEach { point ->
                 try {
-                    val myInfoWindow = MyMarkerWindow(binding.map)
-                    marker = Marker(binding.map)
+                    val marker = Marker(binding.map)
                     marker.apply {
                         icon = AppCompatResources.getDrawable(
                             requireContext(),
