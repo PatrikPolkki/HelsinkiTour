@@ -53,7 +53,7 @@ fun bindShowImage(view: ImageView, url: String) {
 }
 
 @BindingAdapter("eventDates")
-fun bindEventDates(view: TextView, item: Helsinki) {
+fun bindEventDates(view: TextView, item: Helsinki?) {
     if (item is Event) {
         val startDate = stringToDate(item.eventDates.startingDay) ?: return
         val endDate = stringToDate(item.eventDates.endingDay)
@@ -78,29 +78,29 @@ fun bindEventDates(view: TextView, item: Helsinki) {
 }
 
 @BindingAdapter("whereAndWhen")
-fun bindWhereAndWhen(view: TextView, item: Helsinki) {
+fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     if (item is Activity) {
         view.text = item.whereWhenDuration.duration
     }
 }
 
 @BindingAdapter("showIfEvent")
-fun bindShowIfEvent(view: View, item: Helsinki) {
+fun bindShowIfEvent(view: View, item: Helsinki?) {
     view.visibility = if (item is Event) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfActivity")
-fun bindShowIfActivity(view: View, item: Helsinki) {
+fun bindShowIfActivity(view: View, item: Helsinki?) {
     view.visibility = if (item is Activity) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfPlace")
-fun bindShowIfPlace(view: View, item: Helsinki) {
+fun bindShowIfPlace(view: View, item: Helsinki?) {
     view.visibility = if (item is Place) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfHasDuration")
-fun bindShowIfHasDuration(view: View, item: Helsinki) {
+fun bindShowIfHasDuration(view: View, item: Helsinki?) {
     if (item is Activity) {
         view.visibility = if (item.whereWhenDuration.duration == null) View.GONE else View.VISIBLE
     }
@@ -117,7 +117,8 @@ fun bindUrl(view: TextView, url: String?) {
 }
 
 @BindingAdapter("address")
-fun bindAddress(view: TextView, address: Address) {
+fun bindAddress(view: TextView, address: Address?) {
+    address ?: return
     view.text = view.context.getString(
         R.string.address_street_city,
         address.streetAddress,
@@ -127,7 +128,7 @@ fun bindAddress(view: TextView, address: Address) {
 }
 
 @BindingAdapter("hours")
-fun bindHours(view: TextView, item: Helsinki) {
+fun bindHours(view: TextView, item: Helsinki?) {
     if (item !is Place) return
 
     val context = view.context
