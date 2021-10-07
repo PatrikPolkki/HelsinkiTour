@@ -24,4 +24,5 @@
     <string name="open_24">Auki 24h</string>
     <string name="favorite">Suosikki</string>
     <string name="step_count">Askeleet  yhteensä: %d</string>
+    <string name="favorites">Suosikit</string>
 </resources>

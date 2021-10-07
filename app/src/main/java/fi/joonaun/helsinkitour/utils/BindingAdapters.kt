@@ -3,7 +3,6 @@ package fi.joonaun.helsinkitour.utils
 import android.content.Context
 import android.text.util.Linkify
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -31,18 +30,20 @@ fun bindShowImages(view: View, images: List<Image>?) {
     }
 }
 
-@BindingAdapter("imageIfExist")
-fun bindShowImageOrPlaceholder(view: ImageView, images: List<Image>?) {
-    if (images == null || images.isEmpty()) {
-        view.setImageDrawable(
+@BindingAdapter(value = ["image", "imageList"], requireAll = false)
+fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<Image>?) {
+    when {
+        image != null -> loadSmallImage(view, image)
+        imageList != null && imageList.isNotEmpty() -> {
+            val img = imageList.first()
+            loadSmallImage(view, img.url)
+        }
+        else -> view.setImageDrawable(
             ContextCompat.getDrawable(
                 view.context,
                 R.drawable.ic_baseline_image_not_supported_24
             )
         )
-    } else {
-        val img = images.first()
-        loadSmallImage(view, img.url)
     }
 }
 
@@ -160,7 +161,7 @@ fun bindHours(view: TextView, item: Helsinki) {
 
 @BindingAdapter("favorite")
 fun bindFavorite(view: MaterialButton, favorite: Boolean) {
-    if(favorite) {
+    if (favorite) {
         view.setIconResource(R.drawable.ic_baseline_check_24)
     } else {
         view.setIconResource(R.drawable.ic_baseline_star_24)
