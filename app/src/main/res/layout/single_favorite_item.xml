@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="helsinkiItem"
-            type="fi.joonaun.helsinkitour.network.Helsinki" />
+            name="favoriteItem"
+            type="fi.joonaun.helsinkitour.database.Favorite" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="fitCenter"
-            app:imageList="@{helsinkiItem.description.images}"
+            app:image="@{favoriteItem.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{helsinkiItem.getLocaleName()}"
+            android:text="@{favoriteItem.name}"
             tools:text="Title here" />
 
         <TextView
@@ -65,7 +65,7 @@
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:text="@{helsinkiItem.description.intro ?? helsinkiItem.description.body}"
+            android:text="@{favoriteItem.shortDescription}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"

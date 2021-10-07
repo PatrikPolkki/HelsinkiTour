@@ -3,7 +3,6 @@ package fi.joonaun.helsinkitour.utils
 import android.content.Context
 import android.text.util.Linkify
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -31,18 +30,20 @@ fun bindShowImages(view: View, images: List<Image>?) {
     }
 }
 
-@BindingAdapter("imageIfExist")
-fun bindShowImageOrPlaceholder(view: ImageView, images: List<Image>?) {
-    if (images == null || images.isEmpty()) {
-        view.setImageDrawable(
+@BindingAdapter(value = ["image", "imageList"], requireAll = false)
+fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<Image>?) {
+    when {
+        image != null -> loadSmallImage(view, image)
+        imageList != null && imageList.isNotEmpty() -> {
+            val img = imageList.first()
+            loadSmallImage(view, img.url)
+        }
+        else -> view.setImageDrawable(
             ContextCompat.getDrawable(
                 view.context,
                 R.drawable.ic_baseline_image_not_supported_24
             )
         )
-    } else {
-        val img = images.first()
-        loadSmallImage(view, img.url)
     }
 }
 
@@ -52,7 +53,7 @@ fun bindShowImage(view: ImageView, url: String) {
 }
 
 @BindingAdapter("eventDates")
-fun bindEventDates(view: TextView, item: Helsinki) {
+fun bindEventDates(view: TextView, item: Helsinki?) {
     if (item is Event) {
         val startDate = stringToDate(item.eventDates.startingDay) ?: return
         val endDate = stringToDate(item.eventDates.endingDay)
@@ -77,29 +78,29 @@ fun bindEventDates(view: TextView, item: Helsinki) {
 }
 
 @BindingAdapter("whereAndWhen")
-fun bindWhereAndWhen(view: TextView, item: Helsinki) {
+fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     if (item is Activity) {
         view.text = item.whereWhenDuration.duration
     }
 }
 
 @BindingAdapter("showIfEvent")
-fun bindShowIfEvent(view: View, item: Helsinki) {
+fun bindShowIfEvent(view: View, item: Helsinki?) {
     view.visibility = if (item is Event) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfActivity")
-fun bindShowIfActivity(view: View, item: Helsinki) {
+fun bindShowIfActivity(view: View, item: Helsinki?) {
     view.visibility = if (item is Activity) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfPlace")
-fun bindShowIfPlace(view: View, item: Helsinki) {
+fun bindShowIfPlace(view: View, item: Helsinki?) {
     view.visibility = if (item is Place) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showIfHasDuration")
-fun bindShowIfHasDuration(view: View, item: Helsinki) {
+fun bindShowIfHasDuration(view: View, item: Helsinki?) {
     if (item is Activity) {
         view.visibility = if (item.whereWhenDuration.duration == null) View.GONE else View.VISIBLE
     }
@@ -116,7 +117,8 @@ fun bindUrl(view: TextView, url: String?) {
 }
 
 @BindingAdapter("address")
-fun bindAddress(view: TextView, address: Address) {
+fun bindAddress(view: TextView, address: Address?) {
+    address ?: return
     view.text = view.context.getString(
         R.string.address_street_city,
         address.streetAddress,
@@ -126,7 +128,7 @@ fun bindAddress(view: TextView, address: Address) {
 }
 
 @BindingAdapter("hours")
-fun bindHours(view: TextView, item: Helsinki) {
+fun bindHours(view: TextView, item: Helsinki?) {
     if (item !is Place) return
 
     val context = view.context
@@ -160,7 +162,7 @@ fun bindHours(view: TextView, item: Helsinki) {
 
 @BindingAdapter("favorite")
 fun bindFavorite(view: MaterialButton, favorite: Boolean) {
-    if(favorite) {
+    if (favorite) {
         view.setIconResource(R.drawable.ic_baseline_check_24)
     } else {
         view.setIconResource(R.drawable.ic_baseline_star_24)

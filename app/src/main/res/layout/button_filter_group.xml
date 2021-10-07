@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButtonToggleGroup android:id="@+id/searchButtonGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:checkedButton="@id/groupBtnActivities"
+    app:selectionRequired="true"
+    app:singleSelection="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/groupBtnActivities"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activities" />
+
+    <Button
+        android:id="@+id/groupBtnEvents"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/events" />
+
+    <Button
+        android:id="@+id/groupBtnPlaces"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/places" />
+</com.google.android.material.button.MaterialButtonToggleGroup>

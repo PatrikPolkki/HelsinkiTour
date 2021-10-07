@@ -60,11 +60,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     }
 
     private fun initUI() {
-        binding.rvResults.apply {
+        binding.resultRv.rvResults.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = SearchRecyclerViewAdapter(this@SearchFragment)
         }
-        binding.searchButtonGroup.addOnButtonCheckedListener(this)
+        binding.btnGroup.searchButtonGroup.addOnButtonCheckedListener(this)
     }
 
     private fun initObservers() {
@@ -74,7 +74,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private val helsinkiObserver = Observer<List<Helsinki>> {
         Log.d("Observer", "${it.size}")
-        val adapter = (binding.rvResults.adapter as SearchRecyclerViewAdapter)
+        val adapter = (binding.resultRv.rvResults.adapter as SearchRecyclerViewAdapter)
         adapter.clearItems()
         adapter.addItems(it)
     }

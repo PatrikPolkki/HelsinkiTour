@@ -10,7 +10,8 @@ data class Favorite(
     @PrimaryKey val id: String,
     val type: HelsinkiType,
     val name: String,
-    val imageUrl: String?
+    val imageUrl: String?,
+    val shortDescription: String?
 )
 
 @Entity

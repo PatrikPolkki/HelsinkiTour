@@ -10,6 +10,7 @@ import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.Place
 import fi.joonaun.helsinkitour.utils.HelsinkiType
+import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
 
 class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
@@ -46,20 +47,6 @@ class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
                 Log.d("FAVORITE", "Deleted")
             }
         }
-    }
-
-    private fun makeFavoriteItem(item: Helsinki): Favorite? {
-        return Favorite(
-            item.id,
-            when (item) {
-                is Event -> HelsinkiType.EVENT
-                is Place -> HelsinkiType.PLACE
-                is Activity -> HelsinkiType.ACTIVITY
-                else -> return null
-            },
-            item.getLocaleName() ?: return null,
-            item.description.images?.firstOrNull()?.url ?: return null
-        )
     }
 }
 

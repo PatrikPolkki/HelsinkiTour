@@ -45,14 +45,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         askAllPermissions()
     }
 
-    override fun onStart() {
-        super.onStart()
-        registerSensor()
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        sm?.unregisterListener(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        sm?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
