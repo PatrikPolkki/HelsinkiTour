@@ -29,6 +29,7 @@ import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
+import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -58,7 +59,7 @@ data class RelatedObj(
 )
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
-    ChipGroup.OnCheckedChangeListener {
+    ChipGroup.OnCheckedChangeListener, BubbleClickListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationManager: LocationManager
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -141,12 +142,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private val distanceObserver = Observer<Location> { vmLocation ->
-        val dateFormat = DateFormat.getDateInstance()
-        val date: String = dateFormat.format(Date())
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
             Log.d("DISTANCE", distance.toString())
-            viewModel.insertDistance(distance.roundToInt(), date)
+            viewModel.insertDistance(distance.roundToInt(), getTodayDate())
         }
         locDistance = vmLocation
     }
@@ -224,7 +223,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
             val allMarkers = RadiusMarkerClusterer(requireContext())
-            val myInfoWindow = MyMarkerWindow(binding.map)
+            val myInfoWindow = MyMarkerWindow(binding.map, this@MapFragment)
             val userLocation: LiveData<Location> = viewModel.getUserLocation()
             pointInfo.forEach { point ->
                 try {
@@ -305,5 +304,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 getUserLoc()
             }
         }
+    }
+
+    override fun onBubbleClickListener() {
+        Log.d("bubbleclicklistener", "TOIMIIIII")
     }
 }

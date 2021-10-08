@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -34,7 +35,7 @@ import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.views.overlay.Polyline
 
 
-class MyMarkerWindow(mapView: MapView) : InfoWindow(R.layout.info_window, mapView) {
+class MyMarkerWindow(mapView: MapView, private val onBubbleClickListener: BubbleClickListener) : InfoWindow(R.layout.info_window, mapView) {
 
     lateinit var roadOverlay: Polyline
 
@@ -63,6 +64,10 @@ class MyMarkerWindow(mapView: MapView) : InfoWindow(R.layout.info_window, mapVie
         mView = binding?.root
 
         binding?.setVariable(BR.helsinkiItem, selectedMarker.helsinki)
+
+        mView.findViewById<CheckBox>(R.id.materialCheckBox).setOnClickListener {
+            onBubbleClickListener.onBubbleClickListener()
+        }
 
         val roadManager: RoadManager = OSRMRoadManager(mView.context, "MY_USER_AGENT")
         val wayPoints: ArrayList<GeoPoint> = ArrayList()
