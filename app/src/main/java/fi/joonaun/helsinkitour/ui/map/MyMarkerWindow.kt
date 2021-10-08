@@ -1,46 +1,29 @@
 package fi.joonaun.helsinkitour.ui.map
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.findNavController
 import fi.joonaun.helsinkitour.BR
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.AppDatabase
-import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
-import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.Place
-import fi.joonaun.helsinkitour.ui.search.CellClickListener
 import fi.joonaun.helsinkitour.utils.HelsinkiType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.supervisorScope
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
+import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.events.MapEventsReceiver
-import org.osmdroid.events.MapListener
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Overlay
-import org.osmdroid.views.overlay.infowindow.InfoWindow
-import org.osmdroid.bonuspack.location.POI
-import org.osmdroid.bonuspack.routing.RoadManager
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.views.overlay.Polyline
-import kotlin.coroutines.coroutineContext
+import org.osmdroid.views.overlay.infowindow.InfoWindow
 
 
 class MyMarkerWindow(mapView: MapView, private val onBubbleClickListener: BubbleClickListener) :
@@ -86,7 +69,10 @@ class MyMarkerWindow(mapView: MapView, private val onBubbleClickListener: Bubble
             checkBox.apply {
                 isChecked = fav != null
                 setOnClickListener {
-                    onBubbleClickListener.onBubbleClickListener(selectedMarker.helsinki, fav != null)
+                    onBubbleClickListener.onBubbleClickListener(
+                        selectedMarker.helsinki,
+                        fav != null
+                    )
                 }
             }
         }

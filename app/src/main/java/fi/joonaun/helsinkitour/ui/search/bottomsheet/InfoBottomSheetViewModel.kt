@@ -1,18 +1,11 @@
 package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
-import fi.joonaun.helsinkitour.database.Favorite
-import fi.joonaun.helsinkitour.network.Activity
-import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
-import fi.joonaun.helsinkitour.network.Place
-import fi.joonaun.helsinkitour.utils.HelsinkiType
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
-import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
 
 class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
@@ -44,7 +37,8 @@ class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
     }
 }
 
-class InfoBottomSheetViewModelFactory(private val context: Context, private val id: String) : ViewModelProvider.Factory {
+class InfoBottomSheetViewModelFactory(private val context: Context, private val id: String) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(InfoBottomSheetViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

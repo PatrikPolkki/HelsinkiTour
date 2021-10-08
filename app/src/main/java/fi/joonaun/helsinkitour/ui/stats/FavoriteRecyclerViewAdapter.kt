@@ -1,13 +1,10 @@
 package fi.joonaun.helsinkitour.ui.stats
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.SingleFavoriteItemBinding
-import fi.joonaun.helsinkitour.databinding.SingleSearchItemBinding
-import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.search.CellClickListener
 import fi.joonaun.helsinkitour.utils.HelsinkiType
 
@@ -52,7 +49,7 @@ class FavoriteRecyclerViewAdapter(private val cellClickListener: CellClickListen
         val item = results[position]
         holder.bind(item)
 
-        val type = when(item.type) {
+        val type = when (item.type) {
             HelsinkiType.EVENT -> 1
             HelsinkiType.PLACE -> 2
             HelsinkiType.ACTIVITY -> 3

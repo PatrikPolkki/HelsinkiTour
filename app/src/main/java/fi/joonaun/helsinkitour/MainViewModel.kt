@@ -10,8 +10,6 @@ import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.network.Place
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainViewModel(context: Context) : ViewModel() {
     private val repository: HelsinkiRepository = HelsinkiRepository
@@ -71,7 +69,7 @@ class MainViewModel(context: Context) : ViewModel() {
             val date = getTodayDate()
             val newStat = Stat(date)
             val id = database.statDao().insert(newStat)
-            stats = if(id == -1L) database.statDao().get(date) else newStat
+            stats = if (id == -1L) database.statDao().get(date) else newStat
         }
     }
 
@@ -86,7 +84,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
 class MainViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(MainViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(context) as T
         }

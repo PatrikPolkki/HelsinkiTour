@@ -14,11 +14,10 @@ import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.FragmentStatsBinding
 import fi.joonaun.helsinkitour.ui.search.CellClickListener
-import fi.joonaun.helsinkitour.ui.search.SearchRecyclerViewAdapter
 import fi.joonaun.helsinkitour.ui.search.bottomsheet.InfoBottomSheet
-import fi.joonaun.helsinkitour.utils.HelsinkiType
 
-class StatsFragment : Fragment(R.layout.fragment_stats), MaterialButtonToggleGroup.OnButtonCheckedListener, CellClickListener {
+class StatsFragment : Fragment(R.layout.fragment_stats),
+    MaterialButtonToggleGroup.OnButtonCheckedListener, CellClickListener {
     private lateinit var binding: FragmentStatsBinding
     private val viewModel: StatsViewModel by viewModels {
         StatsViewModelFactory(requireContext())

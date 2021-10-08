@@ -28,33 +28,21 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.chip.ChipGroup
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
-import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
-import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
-import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
-import java.lang.Exception
-import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
-import org.osmdroid.events.ZoomEvent
-
-import org.osmdroid.events.ScrollEvent
-
-import org.osmdroid.events.MapListener
-import org.osmdroid.views.overlay.Polyline
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -231,7 +219,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
             val allMarkers = RadiusMarkerClusterer(requireContext())
-            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_24)
+            val drawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_24)
             drawable?.setTint(Color.BLACK)
             allMarkers.setIcon(drawable?.toBitmap(200, 200))
             val myInfoWindow = MyMarkerWindow(binding.map, this@MapFragment)
@@ -286,16 +275,16 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             R.id.chip2 -> {
                 Log.d("CHECKED", binding.chip2.isChecked.toString())
                 if (binding.chip2.isChecked)
-                lifecycleScope.launch {
-                    viewModel.setHelsinkiList(HelsinkiRepository.getAllEvents().data)
-                }
+                    lifecycleScope.launch {
+                        viewModel.setHelsinkiList(HelsinkiRepository.getAllEvents().data)
+                    }
             }
             R.id.chip3 -> {
                 Log.d("CHECKED", binding.chip3.isChecked.toString())
                 if (binding.chip3.isChecked)
-                lifecycleScope.launch {
-                    viewModel.setHelsinkiList(HelsinkiRepository.getAllPlaces().data)
-                }
+                    lifecycleScope.launch {
+                        viewModel.setHelsinkiList(HelsinkiRepository.getAllPlaces().data)
+                    }
             }
         }
     }

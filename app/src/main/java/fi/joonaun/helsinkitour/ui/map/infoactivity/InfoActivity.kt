@@ -1,12 +1,11 @@
 package fi.joonaun.helsinkitour.ui.map.infoactivity
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import fi.joonaun.helsinkitour.databinding.ActivityInfoBinding
 
-class InfoActivity: AppCompatActivity() {
+class InfoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInfoBinding
     private val args: InfoActivityArgs by navArgs()
 

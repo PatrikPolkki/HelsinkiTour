@@ -2,21 +2,14 @@ package fi.joonaun.helsinkitour.ui.map
 
 import android.content.Context
 import android.location.Location
-import android.location.LocationManager
-import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
-import fi.joonaun.helsinkitour.database.Stat
 import fi.joonaun.helsinkitour.network.Helsinki
-import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
-import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
-import org.osmdroid.util.GeoPoint
-import retrofit2.http.HEAD
 
-class MapViewModel(context: Context): ViewModel() {
+class MapViewModel(context: Context) : ViewModel() {
     private val database = AppDatabase.get(context)
     // val favorite = database.favoriteDao().get(id)
 
@@ -69,7 +62,7 @@ class MapViewModel(context: Context): ViewModel() {
 
 class MapViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(MapViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MapViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return MapViewModel(context) as T
         }

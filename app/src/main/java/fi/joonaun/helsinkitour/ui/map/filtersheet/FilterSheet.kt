@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import fi.joonaun.helsinkitour.databinding.ModalSheetFilterBinding
 
-class FilterSheet: BottomSheetDialogFragment() {
+class FilterSheet : BottomSheetDialogFragment() {
     lateinit var binding: ModalSheetFilterBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ModalSheetFilterBinding.inflate(layoutInflater
+        binding = ModalSheetFilterBinding.inflate(
+            layoutInflater
         )
 
         return binding.root
