@@ -9,6 +9,7 @@ import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.network.Place
+import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -68,9 +69,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
     fun addStatsIfNotExist() {
         viewModelScope.launch {
-            val today = Calendar.getInstance().time
-            val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            val date = formatter.format(today)
+            val date = getTodayDate()
             val newStat = Stat(date)
             val id = database.statDao().insert(newStat)
             stats = if(id == -1L) database.statDao().get(date) else newStat

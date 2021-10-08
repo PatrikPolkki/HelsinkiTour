@@ -6,6 +6,8 @@ import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.Place
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun parseHtml(text: String): String {
     var result = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
@@ -27,4 +29,10 @@ fun makeFavoriteItem(item: Helsinki): Favorite? {
         item.description.images?.firstOrNull()?.url ?: return null,
         item.description.intro ?: item.description.body
     )
+}
+
+fun getTodayDate(): String {
+    val today = Calendar.getInstance().time
+    val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    return formatter.format(today)
 }
