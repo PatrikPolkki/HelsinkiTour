@@ -3,6 +3,7 @@ package fi.joonaun.helsinkitour.ui.map
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -14,9 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -24,11 +28,13 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.chip.ChipGroup
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
+import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
+import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -54,11 +60,12 @@ import kotlin.math.roundToInt
 
 data class RelatedObj(
     val helsinki: Helsinki,
-    val location: LiveData<Location>
+    val location: LiveData<Location>,
+    val owner: LifecycleOwner
 )
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
-    ChipGroup.OnCheckedChangeListener {
+    ChipGroup.OnCheckedChangeListener, BubbleClickListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationManager: LocationManager
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -80,15 +87,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         )
         binding = FragmentMapBinding.inflate(layoutInflater)
 
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            ), 0
-        )
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         binding.MapChipGroup.setOnCheckedChangeListener(this)
@@ -98,7 +101,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             icon = AppCompatResources.getDrawable(
                 requireContext(),
                 R.drawable.ic_baseline_person_pin_circle_24
-            )
+            )?.also {
+                it.setTint(Color.DKGRAY)
+            }
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         }
         binding.map.apply {
@@ -141,12 +146,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private val distanceObserver = Observer<Location> { vmLocation ->
-        val dateFormat = DateFormat.getDateInstance()
-        val date: String = dateFormat.format(Date())
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
             Log.d("DISTANCE", distance.toString())
-            viewModel.insertDistance(distance.roundToInt(), date)
+            viewModel.insertDistance(distance.roundToInt(), getTodayDate())
         }
         locDistance = vmLocation
     }
@@ -224,20 +227,26 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
             val allMarkers = RadiusMarkerClusterer(requireContext())
-            val myInfoWindow = MyMarkerWindow(binding.map)
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_24)
+            drawable?.setTint(Color.BLACK)
+            allMarkers.setIcon(drawable?.toBitmap(200, 200))
+            val myInfoWindow = MyMarkerWindow(binding.map, this@MapFragment)
             val userLocation: LiveData<Location> = viewModel.getUserLocation()
             pointInfo.forEach { point ->
                 try {
                     val marker = Marker(binding.map)
                     marker.apply {
+
                         icon = AppCompatResources.getDrawable(
                             requireContext(),
                             R.drawable.ic_baseline_place_24
-                        )
+                        )?.also {
+                            it.setTint(Color.DKGRAY)
+                        }
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                         position = GeoPoint(point.location.lat, point.location.lon)
                         infoWindow = myInfoWindow
-                        relatedObject = RelatedObj(point, userLocation)
+                        relatedObject = RelatedObj(point, userLocation, viewLifecycleOwner)
                         closeInfoWindow()
                     }
                     allMarkers.add(marker)
@@ -304,6 +313,15 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 Log.d("FAB", "WORKS")
                 getUserLoc()
             }
+        }
+    }
+
+    override fun onBubbleClickListener(helsinkiItem: Helsinki, fav: Boolean) {
+        Log.d("favButton", "TOIMI")
+        if (fav) {
+            viewModel.deleteFavorite(helsinkiItem)
+        } else {
+            viewModel.addFavourite(helsinkiItem)
         }
     }
 }
