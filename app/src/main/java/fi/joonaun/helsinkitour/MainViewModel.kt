@@ -1,7 +1,6 @@
 package fi.joonaun.helsinkitour
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.database.Stat
