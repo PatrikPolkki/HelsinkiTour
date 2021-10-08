@@ -26,28 +26,19 @@ import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
+import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
-import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
-import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
-import java.lang.Exception
-import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
-import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
-import org.osmdroid.bonuspack.routing.RoadManager
-import org.osmdroid.events.ZoomEvent
-
-import org.osmdroid.events.ScrollEvent
-
-import org.osmdroid.events.MapListener
-import org.osmdroid.views.overlay.Polyline
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -65,7 +56,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private lateinit var userMarker: Marker
     private var locDistance: Location? = null
 
-    private val viewModel: MapViewModel by viewModels{
+    private val viewModel: MapViewModel by viewModels {
         MapViewModelFactory(requireContext())
     }
 
@@ -217,7 +208,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun initFirstObserver() {
-        mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
+        viewModel.helsinkiList.observe(viewLifecycleOwner, helsinkiObserver)
+        lifecycleScope.launch {
+            viewModel.setHelsinkiList(HelsinkiRepository.getAllActivities().data)
+        }
     }
 
 
@@ -256,29 +250,33 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private val helsinkiObserver = Observer<List<Helsinki>> {
         Log.d("Observer", "${it.size}")
+        binding.map.overlays.clear()
         addMarker(it)
     }
 
 
     override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
-        mainViewModel.activities.removeObserver(helsinkiObserver)
-        mainViewModel.events.removeObserver(helsinkiObserver)
-        mainViewModel.places.removeObserver(helsinkiObserver)
-
-        binding.map.overlays.clear()
         when (checkedId) {
             R.id.chip1 -> {
                 Log.d("CHECKED", binding.chip1.isChecked.toString())
-                mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
+                if (binding.chip1.isChecked)
+                    lifecycleScope.launch {
+                        viewModel.setHelsinkiList(HelsinkiRepository.getAllActivities().data)
+                    }
             }
             R.id.chip2 -> {
                 Log.d("CHECKED", binding.chip2.isChecked.toString())
-                mainViewModel.events.observe(viewLifecycleOwner, helsinkiObserver)
+                if (binding.chip2.isChecked)
+                lifecycleScope.launch {
+                    viewModel.setHelsinkiList(HelsinkiRepository.getAllEvents().data)
+                }
             }
             R.id.chip3 -> {
                 Log.d("CHECKED", binding.chip3.isChecked.toString())
-                mainViewModel.places.observe(viewLifecycleOwner, helsinkiObserver)
-
+                if (binding.chip3.isChecked)
+                lifecycleScope.launch {
+                    viewModel.setHelsinkiList(HelsinkiRepository.getAllPlaces().data)
+                }
             }
         }
     }

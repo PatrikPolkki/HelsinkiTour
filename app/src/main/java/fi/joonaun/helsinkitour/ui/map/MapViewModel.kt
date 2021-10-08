@@ -6,9 +6,11 @@ import android.location.LocationManager
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.database.Stat
+import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
+import retrofit2.http.HEAD
 
 class MapViewModel(context: Context): ViewModel() {
     private val database = AppDatabase.get(context)
@@ -16,6 +18,16 @@ class MapViewModel(context: Context): ViewModel() {
         MutableLiveData<Location>().also {
             it.value = null
         }
+    }
+
+    private val mHelsinkiList: MutableLiveData<List<Helsinki>> by lazy {
+        MutableLiveData<List<Helsinki>>().also { it.value = listOf() }
+    }
+    val helsinkiList: LiveData<List<Helsinki>>
+        get() = mHelsinkiList
+
+    fun setHelsinkiList(list: List<Helsinki>) {
+        mHelsinkiList.value = list
     }
 
     fun getUserLocation(): LiveData<Location> {

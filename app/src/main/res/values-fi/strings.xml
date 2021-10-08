@@ -25,4 +25,5 @@
     <string name="favorite">Suosikki</string>
     <string name="step_count">Askeleet  yhteensä: %d</string>
     <string name="favorites">Suosikit</string>
+    <string name="showOnMap">Näytä kartalla</string>
 </resources>

@@ -24,7 +24,7 @@
             android:padding="8dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 style="@style/SublayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -32,13 +32,26 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnFavorite"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:favorite="@{viewModel.favorite != null ? true : false}"
                     android:text="@string/favorite"
+                    app:favorite="@{viewModel.favorite != null ? true : false}"
+                    app:icon="@drawable/ic_baseline_star_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShowOnMap"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    app:icon="@drawable/ic_baseline_star_24" />
-            </LinearLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/showOnMap"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/txtTitle"
