@@ -31,6 +31,7 @@ import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
+import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
