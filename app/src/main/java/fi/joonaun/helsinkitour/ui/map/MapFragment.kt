@@ -3,9 +3,6 @@ package fi.joonaun.helsinkitour.ui.map
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -19,6 +16,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -28,6 +27,8 @@ import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
+import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
+import fi.joonaun.helsinkitour.ui.stats.StatsViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -35,16 +36,38 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import java.lang.Exception
-import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
-import org.osmdroid.bonuspack.utils.BonusPackHelper
+import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
+import org.osmdroid.bonuspack.routing.RoadManager
+import org.osmdroid.events.ZoomEvent
 
+import org.osmdroid.events.ScrollEvent
+
+import org.osmdroid.events.MapListener
+import org.osmdroid.views.overlay.Polyline
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.roundToInt
+
+
+data class RelatedObj(
+    val helsinki: Helsinki,
+    val location: LiveData<Location>
+)
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     ChipGroup.OnCheckedChangeListener {
     private lateinit var binding: FragmentMapBinding
-    lateinit var locationManager: LocationManager
+    private lateinit var locationManager: LocationManager
     private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var userMarker: Marker
+    private var locDistance: Location? = null
+
+    private val viewModel: MapViewModel by viewModels{
+        MapViewModelFactory(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +82,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         ActivityCompat.requestPermissions(
             requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACTIVITY_RECOGNITION), 0
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ), 0
         )
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -67,13 +93,36 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         binding.MapChipGroup.setOnCheckedChangeListener(this)
 
+        userMarker = Marker(binding.map)
+        userMarker.apply {
+            icon = AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_person_pin_circle_24
+            )
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        }
+        binding.map.apply {
+            overlays.add(userMarker)
+            invalidate()
+        }
+
+        getPref()
         setMap()
         initFirstObserver()
         requestLocation()
 
         binding.filterButton.setOnClickListener(fabListener)
+        binding.fabLocation.setOnClickListener(fabListener)
+
+        viewModel.userLocation.observe(viewLifecycleOwner, userMarkerObserver)
+        viewModel.userLocation.observe(viewLifecycleOwner, distanceObserver)
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        savePref()
     }
 
     private fun requestLocation() {
@@ -82,20 +131,88 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1f, this)
         }
     }
 
     override fun onLocationChanged(p0: Location) {
-        // Log.d("GEOLOCATION", "new latitude: ${p0.latitude} and longitude : ${p0.longitude}")
+        Log.d("LOCATION", "${p0.latitude}, ${p0.longitude}")
+        viewModel.setUserLocation(p0)
+    }
+
+    private val distanceObserver = Observer<Location> { vmLocation ->
+        val dateFormat = DateFormat.getDateInstance()
+        val date: String = dateFormat.format(Date())
+        locDistance?.let {
+            val distance = vmLocation.distanceTo(it)
+            Log.d("DISTANCE", distance.toString())
+            viewModel.insertDistance(distance.roundToInt(), date)
+        }
+        locDistance = vmLocation
+    }
+
+    private val userMarkerObserver = Observer<Location> {
+        if (it != null) {
+            userMarker.position = GeoPoint(it.latitude, it.longitude)
+        } else {
+            userMarker.position = GeoPoint(60.17, 24.95)
+        }
+    }
+
+    private fun savePref() {
+        val preferences =
+            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+
+        viewModel.getUserLocation().value?.let {
+            editor.putString("LOCATION_LAT", it.latitude.toString())
+            editor.putString("LOCATION_LON", it.longitude.toString())
+            editor.putString("LOCATION_PROVIDER", it.provider)
+        }
+        editor.apply()
+    }
+
+    private fun getPref() {
+        val preferences =
+            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+        val lat: String? = preferences.getString("LOCATION_LAT", null)
+        val lon: String? = preferences.getString("LOCATION_LON", null)
+        var location: Location? = null
+        if (lat != null && lon != null) {
+            val provider: String? = preferences.getString("LOCATION_PROVIDER", null)
+            location = Location(provider)
+            location.latitude = lat.toDouble()
+            location.longitude = lon.toDouble()
+        }
+        if (location != null) {
+            viewModel.initUserLocation(location)
+        }
     }
 
     private fun setMap() {
+        val userLoc = viewModel.getUserLocation()
         binding.map.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(14.0)
-            controller.setCenter(GeoPoint(60.17, 24.95))
+            if (userLoc.value != null) {
+                controller.setCenter(GeoPoint(userLoc.value!!.latitude, userLoc.value!!.longitude))
+                userMarker.position = GeoPoint(userLoc.value!!.latitude, userLoc.value!!.longitude)
+            } else {
+                controller.setCenter(GeoPoint(60.17, 24.95))
+                userMarker.position = GeoPoint(60.17, 24.95)
+            }
+
+            addMapListener(object : MapListener {
+                override fun onScroll(event: ScrollEvent): Boolean {
+                    return true
+                }
+
+                override fun onZoom(event: ZoomEvent): Boolean {
+                    //do something
+                    return false
+                }
+            })
         }
     }
 
@@ -103,11 +220,12 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
     }
 
+
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
             val allMarkers = RadiusMarkerClusterer(requireContext())
             val myInfoWindow = MyMarkerWindow(binding.map)
-
+            val userLocation: LiveData<Location> = viewModel.getUserLocation()
             pointInfo.forEach { point ->
                 try {
                     val marker = Marker(binding.map)
@@ -119,7 +237,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                         position = GeoPoint(point.location.lat, point.location.lon)
                         infoWindow = myInfoWindow
-                        relatedObject = point
+                        relatedObject = RelatedObj(point, userLocation)
                         closeInfoWindow()
                     }
                     allMarkers.add(marker)
@@ -140,6 +258,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         Log.d("Observer", "${it.size}")
         addMarker(it)
     }
+
 
     override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
         mainViewModel.activities.removeObserver(helsinkiObserver)
@@ -164,12 +283,26 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    private fun getUserLoc() {
+        val userLoc: LiveData<Location> = viewModel.getUserLocation()
+        binding.map.controller.setCenter(
+            GeoPoint(
+                userLoc.value!!.latitude,
+                userLoc.value!!.longitude
+            )
+        )
+    }
+
     private val fabListener = View.OnClickListener {
         when (it) {
             binding.filterButton -> {
                 val filterSheet = FilterSheet()
 
                 filterSheet.show(parentFragmentManager, filterSheet.tag)
+            }
+            binding.fabLocation -> {
+                Log.d("FAB", "WORKS")
+                getUserLoc()
             }
         }
     }
