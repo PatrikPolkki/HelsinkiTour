@@ -1,7 +1,9 @@
 package fi.joonaun.helsinkitour.utils
 
+import android.util.Log
 import androidx.core.text.HtmlCompat
 import fi.joonaun.helsinkitour.database.Favorite
+import fi.joonaun.helsinkitour.database.FavoriteDao
 import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
@@ -35,4 +37,20 @@ fun getTodayDate(): String {
     val today = Calendar.getInstance().time
     val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return formatter.format(today)
+}
+
+suspend fun addFavouriteToDatabase(helsinkiItem: Helsinki?, dao: FavoriteDao) {
+    helsinkiItem?.let {
+        val item = makeFavoriteItem(it) ?: return
+        val id = dao.insert(item)
+        Log.d("FAVORITE", "Inserted wit id: $id")
+    }
+}
+
+suspend fun deleteFavoriteFromDatabase(helsinkiItem: Helsinki?, dao: FavoriteDao) {
+    helsinkiItem?.let {
+        val item = makeFavoriteItem(it) ?: return
+        dao.delete(item)
+        Log.d("FAVORITE", "Deleted")
+    }
 }

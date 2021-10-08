@@ -10,6 +10,8 @@ import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.Place
 import fi.joonaun.helsinkitour.utils.HelsinkiType
+import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
+import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
 
@@ -31,21 +33,13 @@ class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
 
     fun addFavourite() {
         viewModelScope.launch {
-            helsinkiItem.value?.let {
-                val item = makeFavoriteItem(it) ?: return@launch
-                val id = favoriteDao.insert(item)
-                Log.d("FAVORITE", "Inserted wit id: $id")
-            }
+            addFavouriteToDatabase(helsinkiItem.value, favoriteDao)
         }
     }
 
     fun deleteFavorite() {
         viewModelScope.launch {
-            helsinkiItem.value?.let {
-                val item = makeFavoriteItem(it) ?: return@launch
-                favoriteDao.delete(item)
-                Log.d("FAVORITE", "Deleted")
-            }
+            deleteFavoriteFromDatabase(helsinkiItem.value, favoriteDao)
         }
     }
 }
