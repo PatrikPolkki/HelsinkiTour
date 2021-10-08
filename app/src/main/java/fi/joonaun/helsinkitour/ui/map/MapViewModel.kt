@@ -14,6 +14,7 @@ import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
+import retrofit2.http.HEAD
 
 class MapViewModel(context: Context): ViewModel() {
     private val database = AppDatabase.get(context)
@@ -23,6 +24,16 @@ class MapViewModel(context: Context): ViewModel() {
         MutableLiveData<Location>().also {
             it.value = null
         }
+    }
+
+    private val mHelsinkiList: MutableLiveData<List<Helsinki>> by lazy {
+        MutableLiveData<List<Helsinki>>().also { it.value = listOf() }
+    }
+    val helsinkiList: LiveData<List<Helsinki>>
+        get() = mHelsinkiList
+
+    fun setHelsinkiList(list: List<Helsinki>) {
+        mHelsinkiList.value = list
     }
 
     fun getUserLocation(): LiveData<Location> {

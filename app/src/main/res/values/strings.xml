@@ -33,4 +33,5 @@
     <string name="favorite">Favorite</string>
     <string name="step_count">Total steps: %d</string>
     <string name="favorites">Favorites</string>
+    <string name="showOnMap">Show on map</string>
 </resources>

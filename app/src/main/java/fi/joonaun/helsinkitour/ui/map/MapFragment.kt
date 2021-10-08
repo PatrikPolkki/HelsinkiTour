@@ -72,7 +72,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private lateinit var userMarker: Marker
     private var locDistance: Location? = null
 
-    private val viewModel: MapViewModel by viewModels{
+    private val viewModel: MapViewModel by viewModels {
         MapViewModelFactory(requireContext())
     }
 
@@ -220,7 +220,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun initFirstObserver() {
-        mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
+        viewModel.helsinkiList.observe(viewLifecycleOwner, helsinkiObserver)
+        lifecycleScope.launch {
+            viewModel.setHelsinkiList(HelsinkiRepository.getAllActivities().data)
+        }
     }
 
 
@@ -265,29 +268,33 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private val helsinkiObserver = Observer<List<Helsinki>> {
         Log.d("Observer", "${it.size}")
+        binding.map.overlays.clear()
         addMarker(it)
     }
 
 
     override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
-        mainViewModel.activities.removeObserver(helsinkiObserver)
-        mainViewModel.events.removeObserver(helsinkiObserver)
-        mainViewModel.places.removeObserver(helsinkiObserver)
-
-        binding.map.overlays.clear()
         when (checkedId) {
             R.id.chip1 -> {
                 Log.d("CHECKED", binding.chip1.isChecked.toString())
-                mainViewModel.activities.observe(viewLifecycleOwner, helsinkiObserver)
+                if (binding.chip1.isChecked)
+                    lifecycleScope.launch {
+                        viewModel.setHelsinkiList(HelsinkiRepository.getAllActivities().data)
+                    }
             }
             R.id.chip2 -> {
                 Log.d("CHECKED", binding.chip2.isChecked.toString())
-                mainViewModel.events.observe(viewLifecycleOwner, helsinkiObserver)
+                if (binding.chip2.isChecked)
+                lifecycleScope.launch {
+                    viewModel.setHelsinkiList(HelsinkiRepository.getAllEvents().data)
+                }
             }
             R.id.chip3 -> {
                 Log.d("CHECKED", binding.chip3.isChecked.toString())
-                mainViewModel.places.observe(viewLifecycleOwner, helsinkiObserver)
-
+                if (binding.chip3.isChecked)
+                lifecycleScope.launch {
+                    viewModel.setHelsinkiList(HelsinkiRepository.getAllPlaces().data)
+                }
             }
         }
     }
