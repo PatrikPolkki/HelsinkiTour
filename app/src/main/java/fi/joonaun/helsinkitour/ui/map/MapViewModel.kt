@@ -7,7 +7,10 @@ import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.database.Stat
+import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.ui.stats.StatsViewModel
+import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
+import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import fi.joonaun.helsinkitour.utils.makeFavoriteItem
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
@@ -39,26 +42,18 @@ class MapViewModel(context: Context): ViewModel() {
             database.statDao().updateDistanceTravelled(distance, date)
         }
     }
-    /*
-    fun addFavourite() {
+
+    fun addFavourite(helsinkiItem: Helsinki?) {
         viewModelScope.launch {
-            helsinkiItem.value?.let {
-                val item = makeFavoriteItem(it) ?: return@launch
-                val id = favoriteDao.insert(item)
-                Log.d("FAVORITE", "Inserted wit id: $id")
-            }
+            addFavouriteToDatabase(helsinkiItem, database.favoriteDao())
         }
     }
 
-    fun deleteFavorite() {
+    fun deleteFavorite(helsinkiItem: Helsinki?) {
         viewModelScope.launch {
-            helsinkiItem.value?.let {
-                val item = makeFavoriteItem(it) ?: return@launch
-                favoriteDao.delete(item)
-                Log.d("FAVORITE", "Deleted")
-            }
+            deleteFavoriteFromDatabase(helsinkiItem, database.favoriteDao())
         }
-    }*/
+    }
 }
 
 class MapViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
