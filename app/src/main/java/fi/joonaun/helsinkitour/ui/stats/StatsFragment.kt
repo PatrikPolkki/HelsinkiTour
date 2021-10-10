@@ -59,6 +59,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
+    /**
+     * ClickListener for single recyclerView item
+     */
     override fun onCellClickListener(id: String, typeId: Int) {
         Log.d("CELL", "Cell clicked")
         val modalSheet = InfoBottomSheet()
@@ -69,6 +72,10 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         modalSheet.show(parentFragmentManager, modalSheet.tag)
     }
 
+    /**
+     * Initializes recyclerView. Add OnButtonCheckListener to filter button group.
+     * Set observer for activityFavorite LiveData
+     */
     private fun initUI() {
         binding.resultRv.rvResults.apply {
             layoutManager = LinearLayoutManager(context)
@@ -78,6 +85,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         viewModel.aFavorite.observe(viewLifecycleOwner, favoriteObserver)
     }
 
+    /**
+     * Observer for favorite [List]
+     */
     private val favoriteObserver = Observer<List<Favorite>> {
         Log.d("Observer", "${it.size}")
         val adapter = (binding.resultRv.rvResults.adapter as FavoriteRecyclerViewAdapter)

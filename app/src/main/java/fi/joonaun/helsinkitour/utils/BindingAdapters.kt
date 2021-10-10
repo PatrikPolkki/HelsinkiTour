@@ -16,6 +16,11 @@ import fi.joonaun.helsinkitour.ui.search.bottomsheet.ImageRecyclerViewAdapter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Hides [view] if [images] is null or empty.
+ * If [view] is [RecyclerView] sets it adapter to [ImageRecyclerViewAdapter]
+ * and add [images] to that.
+ */
 @BindingAdapter("recyclerViewImages")
 fun bindShowImages(view: View, images: List<Image>?) {
     if (images == null || images.isEmpty()) {
@@ -30,6 +35,11 @@ fun bindShowImages(view: View, images: List<Image>?) {
     }
 }
 
+/**
+ * If [image] is used then load it to [view].
+ * If [imageList] is used then loads first image from that list to [view].
+ * Else sets placeholder image to [view].
+ */
 @BindingAdapter(value = ["image", "imageList"], requireAll = false)
 fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<Image>?) {
     when {
@@ -47,11 +57,17 @@ fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<
     }
 }
 
+/**
+ * Load [url] to [view]
+ */
 @BindingAdapter("imageUrl")
 fun bindShowImage(view: ImageView, url: String) {
     loadSmallImage(view, url)
 }
 
+/**
+ * If [item] is [Event] then show event dates on [view]
+ */
 @BindingAdapter("eventDates")
 fun bindEventDates(view: TextView, item: Helsinki?) {
     if (item is Event) {
@@ -77,6 +93,9 @@ fun bindEventDates(view: TextView, item: Helsinki?) {
     }
 }
 
+/**
+ * If [item] is [Activity] then show duration on [view]
+ */
 @BindingAdapter("whereAndWhen")
 fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     if (item is Activity) {
@@ -84,21 +103,33 @@ fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     }
 }
 
+/**
+ * If [item] is [Event] then [view] is visible, otherwise view is gone
+ */
 @BindingAdapter("showIfEvent")
 fun bindShowIfEvent(view: View, item: Helsinki?) {
     view.visibility = if (item is Event) View.VISIBLE else View.GONE
 }
 
+/**
+ * If [item] is [Activity] then [view] is visible, otherwise view is gone
+ */
 @BindingAdapter("showIfActivity")
 fun bindShowIfActivity(view: View, item: Helsinki?) {
     view.visibility = if (item is Activity) View.VISIBLE else View.GONE
 }
 
+/**
+ * If [item] is [Place] then [view] is visible, otherwise view is gone
+ */
 @BindingAdapter("showIfPlace")
 fun bindShowIfPlace(view: View, item: Helsinki?) {
     view.visibility = if (item is Place) View.VISIBLE else View.GONE
 }
 
+/**
+ * If [item] is [Activity] then [view] is visible, otherwise view is gone
+ */
 @BindingAdapter("showIfHasDuration")
 fun bindShowIfHasDuration(view: View, item: Helsinki?) {
     if (item is Activity) {
@@ -106,6 +137,9 @@ fun bindShowIfHasDuration(view: View, item: Helsinki?) {
     }
 }
 
+/**
+ * Add clickable link to [view]
+ */
 @BindingAdapter("url")
 fun bindUrl(view: TextView, url: String?) {
     view.apply {
@@ -116,6 +150,9 @@ fun bindUrl(view: TextView, url: String?) {
     Linkify.addLinks(view, Linkify.WEB_URLS)
 }
 
+/**
+ * Sets [view] text to be [address]
+ */
 @BindingAdapter("address")
 fun bindAddress(view: TextView, address: Address?) {
     address ?: return
@@ -127,6 +164,9 @@ fun bindAddress(view: TextView, address: Address?) {
     )
 }
 
+/**
+ * If [item] is [Place] then shows opening hours
+ */
 @BindingAdapter("hours")
 fun bindHours(view: TextView, item: Helsinki?) {
     if (item !is Place) return
@@ -160,6 +200,9 @@ fun bindHours(view: TextView, item: Helsinki?) {
     view.text = text
 }
 
+/**
+ * If [favorite] is true then show checkMark, otherwise show star
+ */
 @BindingAdapter("favorite")
 fun bindFavorite(view: MaterialButton, favorite: Boolean) {
     if (favorite) {
@@ -169,12 +212,18 @@ fun bindFavorite(view: MaterialButton, favorite: Boolean) {
     }
 }
 
+/**
+ * Show [steps] on [view]
+ */
 @BindingAdapter("totalSteps")
 fun bindTotalSteps(view: TextView, steps: Int?) {
     val text = view.context.getString(R.string.step_count, steps ?: 0)
     view.text = text
 }
 
+/**
+ * @return weekdays name based on [id]
+ */
 private fun getWeekday(id: Int, context: Context): String {
     return when (id) {
         1 -> context.getString(R.string.monday)
@@ -188,6 +237,9 @@ private fun getWeekday(id: Int, context: Context): String {
     }
 }
 
+/**
+ * Load [url] to [view] using [Picasso]
+ */
 private fun loadSmallImage(view: ImageView, url: String) {
     Picasso.get().load(url)
         .resize(300, 300)
@@ -197,6 +249,9 @@ private fun loadSmallImage(view: ImageView, url: String) {
         .into(view)
 }
 
+/**
+ * Converts [input] to [LocalDateTime]
+ */
 private fun stringToDate(input: String): LocalDateTime? {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     return try {
@@ -206,6 +261,9 @@ private fun stringToDate(input: String): LocalDateTime? {
     }
 }
 
+/**
+ * Converts [input] to date [String]
+ */
 private fun dateToString(input: LocalDateTime): String {
     val formatter = DateTimeFormatter.ofPattern("d.M.yyyy")
     return try {
@@ -215,6 +273,9 @@ private fun dateToString(input: LocalDateTime): String {
     }
 }
 
+/**
+ * Converts [input] to dateTime [String]
+ */
 private fun dateTimeToString(input: LocalDateTime): String {
     val formatter = DateTimeFormatter.ofPattern("d.M.yyyy H:mm")
     return try {

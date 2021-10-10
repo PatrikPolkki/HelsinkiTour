@@ -49,6 +49,9 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         }
     }
 
+    /**
+     * ClickListener for single recyclerView item
+     */
     override fun onCellClickListener(id: String, typeId: Int) {
         Log.d("CELL", "Cell clicked")
         val modalSheet = InfoBottomSheet()
@@ -59,6 +62,9 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         modalSheet.show(parentFragmentManager, modalSheet.tag)
     }
 
+    /**
+     * Initializes recyclerView and add OnButtonCheckedListener to searchButtonGroup
+     */
     private fun initUI() {
         binding.resultRv.rvResults.apply {
             layoutManager = LinearLayoutManager(context)
@@ -67,11 +73,17 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         binding.btnGroup.searchButtonGroup.addOnButtonCheckedListener(this)
     }
 
+    /**
+     * Initializes observers to viewModels searchResults and selectedType LiveData
+     */
     private fun initObservers() {
         viewModel.searchResults.observe(viewLifecycleOwner, helsinkiObserver)
         viewModel.selectedType.observe(viewLifecycleOwner, typeObserver)
     }
 
+    /**
+     * Observer for List<Helsinki> LiveData
+     */
     private val helsinkiObserver = Observer<List<Helsinki>> {
         Log.d("Observer", "${it.size}")
         val adapter = (binding.resultRv.rvResults.adapter as SearchRecyclerViewAdapter)
@@ -79,5 +91,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         adapter.addItems(it)
     }
 
+    /**
+     * Observer for HelsinkiType LiveData
+     */
     private val typeObserver = Observer<HelsinkiType> { viewModel.doSearch() }
 }

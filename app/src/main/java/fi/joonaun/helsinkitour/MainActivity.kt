@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         Log.d("SENSOR", "$p0 accuracy changed to $p1")
     }
 
+    /**
+     * Asks permissions if they are not already given
+     */
     private fun askAllPermissions() {
         val permissionArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -91,17 +94,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     this,
                     it
                 ) == PackageManager.PERMISSION_GRANTED
-            } -> allPermissionsGranted()
+            } -> initSensor()
             else -> requestPermissionLauncher.launch(permissionArray)
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) initSensor()
     }
 
-    private fun allPermissionsGranted() {
-        initSensor()
-    }
-
+    /**
+     * Registers stepCounter sensor
+     */
     private fun registerSensor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(
                 this,
@@ -115,6 +117,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Initializes bottom navigation and appBar
+     */
     private fun initNavigation() {
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
@@ -131,6 +136,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         navView.setupWithNavController(navController)
     }
 
+    /**
+     * Initializes stepCounter sensor
+     */
     private fun initSensor() {
         sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sStepCounter = sm?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)

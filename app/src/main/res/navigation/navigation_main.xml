@@ -26,11 +26,7 @@
         android:id="@+id/navSearch"
         android:name="fi.joonaun.helsinkitour.ui.search.SearchFragment"
         android:label="@string/search_label"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_navSearch_to_navMap"
-            app:destination="@id/navMap" />
-    </fragment>
+        tools:layout="@layout/fragment_search" />
     <activity
         android:id="@+id/infoActivity"
         android:name="fi.joonaun.helsinkitour.ui.map.infoactivity.InfoActivity"

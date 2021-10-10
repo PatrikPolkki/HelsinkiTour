@@ -11,14 +11,23 @@ import fi.joonaun.helsinkitour.utils.HelsinkiType
 class FavoriteRecyclerViewAdapter(private val cellClickListener: CellClickListener) :
     RecyclerView.Adapter<FavoriteRecyclerViewAdapter.ViewHolder>() {
 
+    /**
+     * List for adapter items
+     */
     private val results: MutableList<Favorite> = mutableListOf()
 
+    /**
+     * Add items to [results] list and notifies adapter of changes
+     */
     fun addItems(items: List<Favorite>) {
         val startPos = results.size
         results.addAll(items)
         notifyItemRangeInserted(startPos, items.size)
     }
 
+    /**
+     * Clears [results] list and notifies adapter of changes
+     */
     fun clearItems() {
         val size = results.size
         results.clear()
@@ -28,6 +37,9 @@ class FavoriteRecyclerViewAdapter(private val cellClickListener: CellClickListen
     class ViewHolder(private val binding: SingleFavoriteItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
+            /**
+             * Fills layout with [SingleFavoriteItemBinding]
+             */
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = SingleFavoriteItemBinding.inflate(layoutInflater, parent, false)
@@ -35,6 +47,9 @@ class FavoriteRecyclerViewAdapter(private val cellClickListener: CellClickListen
             }
         }
 
+        /**
+         * Binds [item] to binding
+         */
         fun bind(item: Favorite) {
             binding.favoriteItem = item
             binding.executePendingBindings()

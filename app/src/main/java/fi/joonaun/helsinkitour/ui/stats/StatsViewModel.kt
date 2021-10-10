@@ -16,6 +16,10 @@ class StatsViewModel(context: Context) : ViewModel() {
     val eFavorite = database.favoriteDao().getType(HelsinkiType.EVENT)
 }
 
+/**
+ * ViewModelFactory for [StatsViewModel]
+ * @param context Context for database
+ */
 class StatsViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatsViewModel::class.java)) {

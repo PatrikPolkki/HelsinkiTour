@@ -6,10 +6,19 @@ import androidx.recyclerview.widget.RecyclerView
 import fi.joonaun.helsinkitour.databinding.SingleImageBinding
 import fi.joonaun.helsinkitour.network.Image
 
+/**
+ * Adapter for image recyclerView
+ */
 class ImageRecyclerViewAdapter : RecyclerView.Adapter<ImageRecyclerViewAdapter.ViewHolder>() {
 
+    /**
+     * List of adapters items
+     */
     private val imageList: MutableList<Image> = mutableListOf()
 
+    /**
+     * Add [list] to [imageList], then notifies adapter for changes
+     */
     fun addImages(list: List<Image>) {
         val size = imageList.size
         imageList.addAll(list)
@@ -19,6 +28,9 @@ class ImageRecyclerViewAdapter : RecyclerView.Adapter<ImageRecyclerViewAdapter.V
     class ViewHolder private constructor(val binding: SingleImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
+            /**
+             * Fills layout with [SingleImageBinding]
+             */
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = SingleImageBinding.inflate(layoutInflater)
@@ -26,6 +38,9 @@ class ImageRecyclerViewAdapter : RecyclerView.Adapter<ImageRecyclerViewAdapter.V
             }
         }
 
+        /**
+         * Binds [image] to binding
+         */
         fun bind(image: Image) {
             binding.image = image
             binding.executePendingBindings()
