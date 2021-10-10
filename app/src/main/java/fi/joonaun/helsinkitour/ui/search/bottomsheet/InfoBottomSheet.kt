@@ -8,16 +8,21 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
+import fi.joonaun.helsinkitour.network.Helsinki
+import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: InfoBottomSheetViewModel by viewModels {
         InfoBottomSheetViewModelFactory(requireContext(), arguments?.get("id") as String)
     }
@@ -37,21 +42,32 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
         return binding.root
     }
 
+    /**
+     * Finds correct item from [HelsinkiRepository] based on argument "type" and "id".
+     * Sets favorite observer and button OnClickListener
+     */
     private fun initUI() {
-        val id = arguments?.get("id") as String
-        val list = when ((arguments?.get("type") as Int)) {
-            1 -> mainViewModel.events
-            2 -> mainViewModel.places
-            3 -> mainViewModel.activities
-            else -> return
+        lifecycleScope.launch(Dispatchers.IO) {
+            val id = arguments?.get("id") as? String
+            val list = when (arguments?.get("type") as? Int) {
+                1 -> HelsinkiRepository.getAllEvents().data
+                2 -> HelsinkiRepository.getAllPlaces().data
+                3 -> HelsinkiRepository.getAllActivities().data
+                else -> return@launch
+            }
+            val item = list.find { it.id == id } ?: return@launch
+            binding.helsinkiItem = item
+            withContext(Dispatchers.Main) {
+                viewModel.setHelsinkiItem(item)
+                viewModel.favorite.observe(viewLifecycleOwner, favoriteObserver)
+                binding.btnShowOnMap.setOnClickListener(showOnMap)
+            }
         }
-        val item = list.value?.find { it.id == id } ?: return
-        binding.helsinkiItem = item
-        viewModel.setHelsinkiItem(item)
-        viewModel.favorite.observe(this, favoriteObserver)
-        binding.btnShowOnMap.setOnClickListener(showOnMap)
     }
 
+    /**
+     * Observer for viewModels "favorite" LiveData
+     */
     private val favoriteObserver = Observer<Favorite?> {
         if (it == null) {
             binding.btnFavorite.setOnClickListener(addFavoriteAction)
@@ -60,14 +76,23 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    /**
+     * ClickListener for adding item to favorite
+     */
     private val addFavoriteAction = View.OnClickListener {
         viewModel.addFavourite()
     }
 
+    /**
+     * ClickListener for removing item from favorite
+     */
     private val removeFavoriteAction = View.OnClickListener {
         viewModel.deleteFavorite()
     }
 
+    /**
+     * ClickListener for showing item on map
+     */
     private val showOnMap = View.OnClickListener {
         val list = listOf(viewModel.helsinkiItem.value ?: return@OnClickListener)
         val bundle = bundleOf("helsinkiList" to list)

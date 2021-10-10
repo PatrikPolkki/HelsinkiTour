@@ -11,6 +11,9 @@ import fi.joonaun.helsinkitour.network.Place
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Parses html tags off from [text]
+ */
 fun parseHtml(text: String): String {
     var result = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
     result = result.replace("\n", "\n\n")
@@ -18,6 +21,9 @@ fun parseHtml(text: String): String {
     return result
 }
 
+/**
+ * Makes [Favorite] item from [item]
+ */
 fun makeFavoriteItem(item: Helsinki): Favorite? {
     return Favorite(
         item.id,
@@ -33,6 +39,9 @@ fun makeFavoriteItem(item: Helsinki): Favorite? {
     )
 }
 
+/**
+ * Get today date as a [String]
+ */
 fun getTodayDate(): String {
     val today = Calendar.getInstance().time
     val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())

@@ -12,39 +12,62 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class SearchViewModel() : ViewModel() {
+class SearchViewModel : ViewModel() {
     companion object {
+        /**
+         * Job used for list filtering
+         */
         private var searchJob = Job()
     }
 
     private val repository = HelsinkiRepository
 
+    /**
+     * MutableLiveData [List] of Helsinki items which have been searched
+     */
     private val mSearchResults: MutableLiveData<List<Helsinki>> by lazy {
         MutableLiveData<List<Helsinki>>().also { it.value = listOf() }
     }
     val searchResults: MutableLiveData<List<Helsinki>>
         get() = mSearchResults
 
+    /**
+     * MutableLiveData [HelsinkiType] of selected search filter
+     */
     private val mSelectedType: MutableLiveData<HelsinkiType> by lazy {
         MutableLiveData<HelsinkiType>().also { it.value = HelsinkiType.ACTIVITY }
     }
     val selectedType: LiveData<HelsinkiType>
         get() = mSelectedType
 
+    /**
+     * Sets [mSelectedType] value to [type]
+     */
     fun setSelectedType(type: HelsinkiType) {
         mSelectedType.value = type
     }
 
-    private var searchText = ""
+    /**
+     * Value of searchFragments editText field
+     */
+    var searchText = ""
 
+    /**
+     * SearchFragments editText onTextChanged callback function
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun search(s: CharSequence, start: Int, before: Int, count: Int) {
         Log.d("SEARCH TEXT", s.toString())
-        searchText = s.trim().toString().lowercase()
+        searchText = s.toString().trim()
         searchJob.cancel()
         searchJob = Job()
         doSearch()
     }
 
+    /**
+     * Filters a repository lists based on [selectedType] and [searchText].
+     * Then sets [mSearchResults] value to be filtered list
+     */
     fun doSearch() {
         mSearchResults.value = listOf()
         viewModelScope.launch(Dispatchers.Default + searchJob) {
@@ -61,7 +84,10 @@ class SearchViewModel() : ViewModel() {
         }
     }
 
+    /**
+     * Check does [str] contains [input]. Ignores letter cases.
+     */
     private fun stringMatch(str: String?, input: String): Boolean {
-        return str?.lowercase()?.contains(input) ?: false
+        return str?.contains(input, true) ?: false
     }
 }
