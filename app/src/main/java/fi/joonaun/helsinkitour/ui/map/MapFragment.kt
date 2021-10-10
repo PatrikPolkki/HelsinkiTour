@@ -114,6 +114,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        showSearchItems()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         savePref()
@@ -320,5 +325,21 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         } else {
             viewModel.addFavourite(helsinkiItem)
         }
+    }
+
+    /**
+     * Checks if there is argument called "helsinkiList". Then casts it to [List<Helsinki>]
+     * and set it to be value of "viewModel.helsinkiList"
+     */
+    private fun showSearchItems() {
+        val args = arguments?.get("helsinkiList") ?: return
+        val list = (args as? List<*>)?.filterIsInstance<Helsinki>()
+        if (list == null || list.isEmpty()) {
+            Log.d("MAP ARGS", "No arguments or is empty")
+            return
+        }
+
+        viewModel.setHelsinkiList(list)
+        binding.MapChipGroup.clearCheck()
     }
 }

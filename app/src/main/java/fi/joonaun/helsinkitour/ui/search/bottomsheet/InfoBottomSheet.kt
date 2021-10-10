@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import fi.joonaun.helsinkitour.MainViewModel
+import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
-import fi.joonaun.helsinkitour.ui.search.SearchFragmentDirections
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
@@ -69,8 +70,9 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
 
     private val showOnMap = View.OnClickListener {
         val list = listOf(viewModel.helsinkiItem.value ?: return@OnClickListener)
-        val action = SearchFragmentDirections.actionNavSearchToNavMap()
-        findNavController().navigate(action)
+        val bundle = bundleOf("helsinkiList" to list)
+        val navController = findNavController()
+        navController.navigate(R.id.navMap, bundle)
         super.dismiss()
     }
 }
