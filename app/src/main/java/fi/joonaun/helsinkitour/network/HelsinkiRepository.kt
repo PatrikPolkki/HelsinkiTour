@@ -9,12 +9,13 @@ object HelsinkiRepository {
     private var activities: Activities? = null
     private var events: Events? = null
     private var places: Places? = null
-    private val language: String
-
-    init {
-        language = if (Locale.getDefault().language == "fi") "fi" else "en"
+    private val language: String by lazy {
+        if (Locale.getDefault().language == "fi") "fi" else "en"
     }
 
+    /**
+     * If [places] is null, then fetch data from API. Otherwise uses already existing value.
+     */
     suspend fun getAllPlaces(): Places {
         if (places == null) {
             try {
@@ -30,6 +31,9 @@ object HelsinkiRepository {
         return places ?: Places(Meta(0, null), emptyList())
     }
 
+    /**
+     * If [events] is null, then fetch data from API. Otherwise uses already existing value.
+     */
     suspend fun getAllEvents(): Events {
         if (events == null) {
             try {
@@ -45,6 +49,9 @@ object HelsinkiRepository {
         return events ?: Events(Meta(0, null), emptyList())
     }
 
+    /**
+     * If [activities] is null, then fetch data from API. Otherwise uses already existing value.
+     */
     suspend fun getAllActivities(): Activities {
         if (activities == null) {
             try {
