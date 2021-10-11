@@ -1,6 +1,7 @@
 package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.osmdroid.util.BoundingBox
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
@@ -91,11 +93,24 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
     }
 
     /**
-     * ClickListener for showing item on map
+     * Sets bounding box and sends it and list on search results to map
      */
     private val showOnMap = View.OnClickListener {
         val list = listOf(viewModel.helsinkiItem.value ?: return@OnClickListener)
-        val bundle = bundleOf("helsinkiList" to list)
+
+        val item = list.first()
+        val north = item.location.lat
+        val south = item.location.lat
+        val west = item.location.lon
+        val east = item.location.lon
+
+        val bounds = try {
+            BoundingBox(north, east, south, west)
+        } catch (e: Exception) {
+            Log.e("BOUNDING BOX", "Error: ${e.localizedMessage}")
+            BoundingBox(60.17, 24.95, 60.17, 24.95)
+        }
+        val bundle = bundleOf("helsinkiList" to list, "bounds" to bounds)
         val navController = findNavController()
         navController.navigate(R.id.navMap, bundle)
         super.dismiss()
