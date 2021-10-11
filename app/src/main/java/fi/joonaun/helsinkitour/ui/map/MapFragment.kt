@@ -41,6 +41,7 @@ import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import java.util.*
@@ -332,8 +333,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
      * and set it to be value of "viewModel.helsinkiList"
      */
     private fun showSearchItems() {
-        val args = arguments?.get("helsinkiList") ?: return
-        val list = (args as? List<*>)?.filterIsInstance<Helsinki>()
+        val argList = arguments?.get("helsinkiList") as? List<*>
+        val list = argList?.filterIsInstance<Helsinki>()
         if (list == null || list.isEmpty()) {
             Log.d("MAP ARGS", "No arguments or is empty")
             return
@@ -341,5 +342,14 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         viewModel.setHelsinkiList(list)
         binding.MapChipGroup.clearCheck()
+
+        val argBounds = arguments?.get("bounds") as? BoundingBox ?: return
+        argBounds.apply {
+            binding.map.controller.zoomToSpan(latNorth - latSouth, lonWest - lonEast)
+            binding.map.controller.setCenter(GeoPoint(
+                (latNorth + latSouth) / 2.0,
+                (lonWest + lonEast) / 2.0
+            ))
+        }
     }
 }

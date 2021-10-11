@@ -28,7 +28,7 @@ class SearchViewModel : ViewModel() {
     private val mSearchResults: MutableLiveData<List<Helsinki>> by lazy {
         MutableLiveData<List<Helsinki>>().also { it.value = listOf() }
     }
-    val searchResults: MutableLiveData<List<Helsinki>>
+    val searchResults: LiveData<List<Helsinki>>
         get() = mSearchResults
 
     /**
