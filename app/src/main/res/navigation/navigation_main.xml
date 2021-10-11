@@ -11,11 +11,8 @@
         android:label="@string/map_label"
         tools:layout="@layout/fragment_map" >
         <action
-            android:id="@+id/action_navMap_to_infoActivity"
-            app:destination="@id/infoActivity"
-            app:launchSingleTop="false"
-            app:popUpTo="@id/navMap"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_navMap_to_infoFragment"
+            app:destination="@id/infoFragment" />
     </fragment>
     <fragment
         android:id="@+id/navStats"
@@ -31,16 +28,15 @@
             android:id="@+id/action_navSearch_to_navMap"
             app:destination="@id/navMap" />
     </fragment>
-    <activity
-        android:id="@+id/infoActivity"
-        android:name="fi.joonaun.helsinkitour.ui.map.infoactivity.InfoActivity"
-        android:label="InfoActivity"
-        tools:layout="@layout/activity_info">
-        <argument
-            android:name="id"
-            app:argType="string" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="fi.joonaun.helsinkitour.ui.map.infofragment.InfoFragment"
+        android:label="InfoFragment" >
         <argument
             android:name="type"
             app:argType="fi.joonaun.helsinkitour.utils.HelsinkiType" />
-    </activity>
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>

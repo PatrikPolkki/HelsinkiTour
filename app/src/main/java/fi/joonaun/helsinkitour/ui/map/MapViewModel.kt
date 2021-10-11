@@ -11,13 +11,16 @@ import kotlinx.coroutines.launch
 
 class MapViewModel(context: Context) : ViewModel() {
     private val database = AppDatabase.get(context)
-    // val favorite = database.favoriteDao().get(id)
 
-    val userLocation: MutableLiveData<Location> by lazy {
+    private val mUserLocation: MutableLiveData<Location> by lazy {
         MutableLiveData<Location>().also {
             it.value = null
         }
     }
+
+    val userLocation: LiveData<Location?>
+        get() = mUserLocation
+
 
     private val mHelsinkiList: MutableLiveData<List<Helsinki>> by lazy {
         MutableLiveData<List<Helsinki>>().also { it.value = listOf() }
@@ -29,16 +32,12 @@ class MapViewModel(context: Context) : ViewModel() {
         mHelsinkiList.value = list
     }
 
-    fun getUserLocation(): LiveData<Location> {
-        return userLocation
-    }
-
     fun initUserLocation(prefLocation: Location) {
-        userLocation.value = prefLocation
+        mUserLocation.value = prefLocation
     }
 
     fun setUserLocation(userLoc: Location) {
-        userLocation.postValue(userLoc)
+        mUserLocation.postValue(userLoc)
     }
 
     fun insertDistance(distance: Int, date: String) {

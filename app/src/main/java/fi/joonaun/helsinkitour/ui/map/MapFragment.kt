@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -26,20 +25,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.chip.ChipGroup
-import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
-import fi.joonaun.helsinkitour.ui.map.filtersheet.FilterSheet
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
-import org.osmdroid.events.MapListener
-import org.osmdroid.events.ScrollEvent
-import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
@@ -49,16 +43,16 @@ import kotlin.math.roundToInt
 
 data class RelatedObj(
     val helsinki: Helsinki,
-    val location: LiveData<Location>,
+    val location: LiveData<Location?>,
     val owner: LifecycleOwner
 )
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
-    ChipGroup.OnCheckedChangeListener, BubbleClickListener {
+    ChipGroup.OnCheckedChangeListener, MarkerClickListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationManager: LocationManager
-    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var userMarker: Marker
+
     private var locDistance: Location? = null
 
     private val viewModel: MapViewModel by viewModels {
@@ -83,7 +77,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        binding.MapChipGroup.setOnCheckedChangeListener(this)
 
         userMarker = Marker(binding.map)
         userMarker.apply {
@@ -105,7 +98,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         initFirstObserver()
         requestLocation()
 
-        binding.filterButton.setOnClickListener(fabListener)
+        binding.MapChipGroup.setOnCheckedChangeListener(this)
         binding.fabLocation.setOnClickListener(fabListener)
 
         viewModel.userLocation.observe(viewLifecycleOwner, userMarkerObserver)
@@ -125,7 +118,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1f, this)
+            val location: Unit =
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1f, this)
+            Log.d("UNIT", location.toString())
         }
     }
 
@@ -134,7 +129,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         viewModel.setUserLocation(p0)
     }
 
-    private val distanceObserver = Observer<Location> { vmLocation ->
+    private val distanceObserver = Observer<Location?> { vmLocation ->
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
             Log.d("DISTANCE", distance.toString())
@@ -143,7 +138,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         locDistance = vmLocation
     }
 
-    private val userMarkerObserver = Observer<Location> {
+    private val userMarkerObserver = Observer<Location?> {
         if (it != null) {
             userMarker.position = GeoPoint(it.latitude, it.longitude)
         } else {
@@ -156,7 +151,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
         val editor = preferences.edit()
 
-        viewModel.getUserLocation().value?.let {
+        viewModel.userLocation.value?.let {
             editor.putString("LOCATION_LAT", it.latitude.toString())
             editor.putString("LOCATION_LON", it.longitude.toString())
             editor.putString("LOCATION_PROVIDER", it.provider)
@@ -182,29 +177,22 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun setMap() {
-        val userLoc = viewModel.getUserLocation()
+        val userLocation: LiveData<Location?> = viewModel.userLocation
+
         binding.map.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(14.0)
-            if (userLoc.value != null) {
-                controller.setCenter(GeoPoint(userLoc.value!!.latitude, userLoc.value!!.longitude))
-                userMarker.position = GeoPoint(userLoc.value!!.latitude, userLoc.value!!.longitude)
-            } else {
-                controller.setCenter(GeoPoint(60.17, 24.95))
-                userMarker.position = GeoPoint(60.17, 24.95)
-            }
-
-            addMapListener(object : MapListener {
-                override fun onScroll(event: ScrollEvent): Boolean {
-                    return true
-                }
-
-                override fun onZoom(event: ZoomEvent): Boolean {
-                    //do something
-                    return false
-                }
-            })
+            controller.setZoom(18.0)
+            controller.setCenter(
+                GeoPoint(
+                    userLocation.value?.latitude ?: 60.17,
+                    userLocation.value?.longitude ?: 24.95
+                )
+            )
+            userMarker.position = GeoPoint(
+                userLocation.value?.latitude ?: 60.17,
+                userLocation.value?.longitude ?: 24.95
+            )
         }
     }
 
@@ -218,18 +206,23 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private fun addMarker(pointInfo: List<Helsinki>) {
         lifecycleScope.launch(Dispatchers.IO) {
+            binding.map.apply {
+                overlays.add(userMarker)
+                invalidate()
+            }
             val allMarkers = RadiusMarkerClusterer(requireContext())
             val drawable =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_24)
             drawable?.setTint(Color.BLACK)
             allMarkers.setIcon(drawable?.toBitmap(200, 200))
+
             val myInfoWindow = MyMarkerWindow(binding.map, this@MapFragment)
-            val userLocation: LiveData<Location> = viewModel.getUserLocation()
+            val userLocation: LiveData<Location?> = viewModel.userLocation
+
             pointInfo.forEach { point ->
                 try {
                     val marker = Marker(binding.map)
                     marker.apply {
-
                         icon = AppCompatResources.getDrawable(
                             requireContext(),
                             R.drawable.ic_baseline_place_24
@@ -249,7 +242,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             }
             binding.map.apply {
                 overlays.add(allMarkers)
-                // displays the marker as soon as it has been added.
                 invalidate()
             }
 
@@ -290,22 +282,17 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun getUserLoc() {
-        val userLoc: LiveData<Location> = viewModel.getUserLocation()
+        val userLocation: LiveData<Location?> = viewModel.userLocation
         binding.map.controller.setCenter(
             GeoPoint(
-                userLoc.value!!.latitude,
-                userLoc.value!!.longitude
+                userLocation.value?.latitude ?: 60.17,
+                userLocation.value?.longitude ?: 24.95
             )
         )
     }
 
     private val fabListener = View.OnClickListener {
         when (it) {
-            binding.filterButton -> {
-                val filterSheet = FilterSheet()
-
-                filterSheet.show(parentFragmentManager, filterSheet.tag)
-            }
             binding.fabLocation -> {
                 Log.d("FAB", "WORKS")
                 getUserLoc()
@@ -313,7 +300,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
-    override fun onBubbleClickListener(helsinkiItem: Helsinki, fav: Boolean) {
+    override fun onMarkerClickListener(helsinkiItem: Helsinki, fav: Boolean) {
         Log.d("favButton", "TOIMI")
         if (fav) {
             viewModel.deleteFavorite(helsinkiItem)
