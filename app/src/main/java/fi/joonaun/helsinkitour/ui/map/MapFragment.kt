@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.GnssStatus
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -25,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.chip.ChipGroup
+import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
 import fi.joonaun.helsinkitour.network.Helsinki
@@ -38,6 +41,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -46,6 +50,12 @@ data class RelatedObj(
     val helsinki: Helsinki,
     val location: LiveData<Location?>,
     val owner: LifecycleOwner
+)
+
+data class MapLocation(
+    val latitude: Double,
+    val longitude: Double,
+    val zoomLevel: Double
 )
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
@@ -59,6 +69,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private val viewModel: MapViewModel by viewModels {
         MapViewModelFactory(requireContext())
     }
+
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +103,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         getPref()
         setMap()
         initFirstObserver()
-        requestLocation()
+
+        addGpsListener()
 
         binding.MapChipGroup.setOnCheckedChangeListener(this)
         binding.fabLocation.setOnClickListener(fabListener)
@@ -110,16 +123,44 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     override fun onDestroy() {
         super.onDestroy()
         savePref()
+        mainViewModel.mapLocation = MapLocation(
+            binding.map.mapCenter.latitude,
+            binding.map.mapCenter.longitude,
+            binding.map.zoomLevelDouble
+        )
+    }
+
+    private val gps = object : GnssStatus.Callback() {
+        override fun onStarted() {
+            super.onStarted()
+            requestLocation()
+        }
+
+        override fun onStopped() {
+            super.onStopped()
+            locationManager.removeUpdates(this@MapFragment)
+        }
+    }
+
+    private fun addGpsListener() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            locationManager.registerGnssStatusCallback(gps, null)
+        }
+
     }
 
     private fun requestLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         ) {
             val location: Unit =
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
             Log.d("UNIT", location.toString())
         }
     }
@@ -132,7 +173,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private val distanceObserver = Observer<Location?> { vmLocation ->
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
-            Log.d("DISTANCE", distance.toString())
+            // Log.d("DISTANCE", distance.toString())
             viewModel.insertDistance(distance.roundToInt(), getTodayDate())
         }
         locDistance = vmLocation
@@ -182,15 +223,30 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         binding.map.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(18.0)
-            maxZoomLevel = 20.0
-            minZoomLevel = 5.0
-            val point = GeoPoint(
+            if (mainViewModel.mapLocation == null) {
+                controller.setZoom(18.0)
+                maxZoomLevel = 20.0
+                minZoomLevel = 5.0
+                controller.setCenter(
+                    GeoPoint(
+                        userLocation.value?.latitude ?: 60.17,
+                        userLocation.value?.longitude ?: 24.95
+                    )
+                )
+            } else {
+                controller.setZoom(mainViewModel.mapLocation?.zoomLevel ?: 10.0)
+                controller.setCenter(
+                    GeoPoint(
+                        mainViewModel.mapLocation?.latitude ?: 60.17,
+                        mainViewModel.mapLocation?.longitude ?: 24.95
+                    )
+                )
+            }
+
+            userMarker.position = GeoPoint(
                 userLocation.value?.latitude ?: 60.17,
                 userLocation.value?.longitude ?: 24.95
             )
-            controller.setCenter(point)
-            userMarker.position = point
         }
     }
 
@@ -281,12 +337,15 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private fun getUserLoc() {
         val userLocation: LiveData<Location?> = viewModel.userLocation
-        binding.map.controller.setCenter(
-            GeoPoint(
-                userLocation.value?.latitude ?: 60.17,
-                userLocation.value?.longitude ?: 24.95
+        if (userLocation.value != null) {
+            binding.map.controller.setCenter(
+                GeoPoint(
+                    userLocation.value?.latitude ?: 60.17,
+                    userLocation.value?.longitude ?: 24.95
+                )
             )
-        )
+        }
+
     }
 
     private val fabListener = View.OnClickListener {

@@ -8,12 +8,15 @@ import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.network.Place
+import fi.joonaun.helsinkitour.ui.map.MapLocation
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.launch
 
 class MainViewModel(context: Context) : ViewModel() {
     private val repository: HelsinkiRepository = HelsinkiRepository
     private val database = AppDatabase.get(context)
+
+    var mapLocation: MapLocation? = null
 
     private val mPlaces: MutableLiveData<List<Place>> by lazy {
         MutableLiveData<List<Place>>()

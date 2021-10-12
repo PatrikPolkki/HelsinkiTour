@@ -35,6 +35,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.infowindow.InfoWindow
+import kotlin.math.roundToInt
 
 
 class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: MarkerClickListener) :
@@ -84,6 +85,8 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
 
         favourites()
         addPolyline()
+
+        mMapView.setMapCenterOffset(0, (mMapView.height / 2.5).roundToInt())
 
         val bubbleReadMore = mView.findViewById<Button>(R.id.readMoreButton)
         bubbleReadMore.setOnClickListener {
