@@ -19,6 +19,7 @@ import fi.joonaun.helsinkitour.network.Activity
 import fi.joonaun.helsinkitour.network.Event
 import fi.joonaun.helsinkitour.network.Place
 import fi.joonaun.helsinkitour.utils.HelsinkiType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
@@ -117,20 +118,20 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
     }
 
     private fun addPolyline() {
-        selectedMarker.owner.lifecycleScope.launch {
-            val roadManager: RoadManager = OSRMRoadManager(mView.context, "MY_USER_AGENT")
-            val wayPoints: ArrayList<GeoPoint> = ArrayList()
-            val startPoint = selectedMarker.location.value?.let {
-                GeoPoint(it.latitude, it.longitude)
+        val roadManager: RoadManager = OSRMRoadManager(mView.context, "MY_USER_AGENT")
+        val wayPoints: ArrayList<GeoPoint> = ArrayList()
+        val startPoint = selectedMarker.location.value?.let {
+            GeoPoint(it.latitude, it.longitude)
+        }
+        val endPoint =
+            GeoPoint(selectedMarker.helsinki.location.lat, selectedMarker.helsinki.location.lon)
+        wayPoints.apply {
+            if (startPoint != null) {
+                add(startPoint)
             }
-            val endPoint =
-                GeoPoint(selectedMarker.helsinki.location.lat, selectedMarker.helsinki.location.lon)
-            wayPoints.apply {
-                if (startPoint != null) {
-                    add(startPoint)
-                }
-                add(endPoint)
-            }
+            add(endPoint)
+        }
+        selectedMarker.owner.lifecycleScope.launch(Dispatchers.IO) {
             val road: Road = roadManager.getRoad(wayPoints)
             roadOverlay = RoadManager.buildRoadOverlay(road)
             roadOverlay.outlinePaint.strokeWidth = 10f

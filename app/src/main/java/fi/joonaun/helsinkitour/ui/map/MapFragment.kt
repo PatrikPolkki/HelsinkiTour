@@ -71,13 +71,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         )
         binding = FragmentMapBinding.inflate(layoutInflater)
 
-        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-
-        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
 
         userMarker = Marker(binding.map)
         userMarker.apply {
@@ -125,7 +119,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             val location: Unit =
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1f, this)
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
             Log.d("UNIT", location.toString())
         }
     }
@@ -189,16 +183,14 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(18.0)
-            controller.setCenter(
-                GeoPoint(
-                    userLocation.value?.latitude ?: 60.17,
-                    userLocation.value?.longitude ?: 24.95
-                )
-            )
-            userMarker.position = GeoPoint(
+            maxZoomLevel = 20.0
+            minZoomLevel = 5.0
+            val point = GeoPoint(
                 userLocation.value?.latitude ?: 60.17,
                 userLocation.value?.longitude ?: 24.95
             )
+            controller.setCenter(point)
+            userMarker.position = point
         }
     }
 
@@ -211,7 +203,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
 
     private fun addMarker(pointInfo: List<Helsinki>) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Default) {
             binding.map.apply {
                 overlays.add(userMarker)
                 invalidate()
