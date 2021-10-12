@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.denzcoskun.imageslider.ImageSlider
+import com.denzcoskun.imageslider.constants.ScaleTypes
+import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import fi.joonaun.helsinkitour.R
@@ -229,6 +232,19 @@ fun bindFavorite(view: MaterialButton, favorite: Boolean) {
 fun bindTotalSteps(view: TextView, steps: Int?) {
     val text = view.context.getString(R.string.step_count, steps ?: 0)
     view.text = text
+}
+
+@BindingAdapter("imageSliderImages")
+fun bindImageSliderImages(view: ImageSlider, images: List<Image>?) {
+    val imageList: MutableList<SlideModel> = mutableListOf()
+
+    images?.forEach {
+        imageList.add(SlideModel(it.url, "", ScaleTypes.CENTER_CROP))
+    }
+    if (imageList.isEmpty())
+        view.visibility = View.GONE
+    else
+        view.setImageList(imageList)
 }
 
 /**

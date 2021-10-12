@@ -1,5 +1,7 @@
 package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +20,8 @@ import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
+import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,26 +74,17 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
     /**
      * Observer for viewModels "favorite" LiveData
      */
-    private val favoriteObserver = Observer<Favorite?> {
-        if (it == null) {
-            binding.btnFavorite.setOnClickListener(addFavoriteAction)
-        } else {
-            binding.btnFavorite.setOnClickListener(removeFavoriteAction)
+    private val favoriteObserver = Observer<Favorite?> { fav ->
+        binding.sheet.favouriteCheckBox.apply {
+            isChecked = fav != null
+            setOnClickListener {
+                if (fav == null) {
+                    viewModel.addFavourite()
+                } else {
+                    viewModel.deleteFavorite()
+                }
+            }
         }
-    }
-
-    /**
-     * ClickListener for adding item to favorite
-     */
-    private val addFavoriteAction = View.OnClickListener {
-        viewModel.addFavourite()
-    }
-
-    /**
-     * ClickListener for removing item from favorite
-     */
-    private val removeFavoriteAction = View.OnClickListener {
-        viewModel.deleteFavorite()
     }
 
     /**
