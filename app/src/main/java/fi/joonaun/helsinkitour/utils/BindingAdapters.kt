@@ -99,7 +99,7 @@ fun bindEventDates(view: TextView, item: Helsinki?) {
 @BindingAdapter("whereAndWhen")
 fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     if (item is Activity) {
-        view.text = item.whereWhenDuration.duration
+        view.text = view.context.getString(R.string.duration_time, item.whereWhenDuration.duration.toString())
     }
 }
 
@@ -163,6 +163,16 @@ fun bindAddress(view: TextView, address: Address?) {
         address.locality
     )
 }
+@BindingAdapter("marker_address")
+fun bindMarkerAddress(view: TextView, address: Address?) {
+    address ?: return
+    view.text = view.context.getString(
+        R.string.marker_address_street_city,
+        address.streetAddress,
+        address.postalCode,
+        address.locality
+    )
+}
 
 /**
  * If [item] is [Place] then shows opening hours
@@ -181,7 +191,7 @@ fun bindHours(view: TextView, item: Helsinki?) {
         opens = it.opens?.dropLast(3)
         closes = it.closes?.dropLast(3)
 
-        text += getWeekday(it.weekdayId, context) + ": "
+        text += "•    " + getWeekday(it.weekdayId, context) + ": "
         text += when {
             // Closed
             opens == null && closes == null && !it.open24h ->

@@ -26,4 +26,9 @@
     <string name="step_count">Askeleet  yhteensä: %d</string>
     <string name="favorites">Suosikit</string>
     <string name="showOnMap">Näytä kartalla</string>
+    <string name="user_location_fab">Käyttäjän sijainti painike</string>
+    <string name="marker_window_description">Kuvaus</string>
+    <string name="marker_window_read_more_btn">Lue lisää</string>
+    <string name="marker_window_address">Osoite</string>
+    <string name="marker_window_url">Lisätietoja</string>
 </resources>
