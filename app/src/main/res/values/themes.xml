@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Theme.HelsinkiTour" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorPrimaryVariant">@color/blue_dark</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/blue_light</item>
-        <item name="colorSecondaryVariant">@color/blue_dark</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -18,5 +18,8 @@
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationStyle</item>
         <item name="toolbarStyle">@style/CustomToolBarStyle</item>
         <item name="floatingActionButtonStyle">@style/CustomFabStyle</item>
+        <item name="android:windowBackground">@color/window_background_day</item>
+        <item name="chipStyle">@style/ChipStyle</item>
+        <item name="materialButtonOutlinedStyle">@style/OutlinedButtonStyle</item>
     </style>
 </resources>
