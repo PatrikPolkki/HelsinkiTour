@@ -34,6 +34,7 @@ import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
@@ -60,6 +61,9 @@ data class MapLocation(
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     ChipGroup.OnCheckedChangeListener, MarkerClickListener {
+    companion object {
+        private var addMarkerJob = Job()
+    }
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationManager: LocationManager
     private lateinit var userMarker: Marker
@@ -223,10 +227,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         binding.map.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
+            maxZoomLevel = 20.0
+            minZoomLevel = 5.0
             if (mainViewModel.mapLocation == null) {
                 controller.setZoom(18.0)
-                maxZoomLevel = 20.0
-                minZoomLevel = 5.0
                 controller.setCenter(
                     GeoPoint(
                         userLocation.value?.latitude ?: 60.17,
@@ -259,7 +263,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
 
     private fun addMarker(pointInfo: List<Helsinki>) {
-        lifecycleScope.launch(Dispatchers.Default) {
+        addMarkerJob.cancel()
+        addMarkerJob = Job()
+        lifecycleScope.launch(Dispatchers.Default + addMarkerJob) {
             binding.map.apply {
                 overlays.add(userMarker)
                 invalidate()
