@@ -27,6 +27,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
     private val mainViewModel: MainViewModel by activityViewModels {
         MainViewModelFactory(requireContext())
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,14 +48,6 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
         }
         val item = list.value?.find { it.id == id } ?: return
         binding.helsinkiItem = item
-
-        val imageList: MutableList<SlideModel> = mutableListOf()
-
-        item.description.images?.forEach {
-            imageList.add(SlideModel(it.url, "", ScaleTypes.CENTER_CROP))
-        }
-        binding.imageSlider.setImageList(imageList)
-
 
         val db = AppDatabase.get(requireContext()).favoriteDao()
         val favourite = db.get(args.id)

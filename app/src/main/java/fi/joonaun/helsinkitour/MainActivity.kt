@@ -124,13 +124,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHost.navController
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navMap, R.id.navSearch, R.id.navStats
-            )
-        )
-
-        setupActionBarWithNavController(navController, appBarConfiguration)
+//        val appBarConfiguration = AppBarConfiguration(
+//            setOf(
+//                R.id.navMap, R.id.navSearch, R.id.navStats
+//            )
+//        )
+//
+//        setupActionBarWithNavController(navController, appBarConfiguration)
 
         val navView = binding.bottomNavigationView
         navView.setupWithNavController(navController)

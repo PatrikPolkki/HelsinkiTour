@@ -40,6 +40,7 @@
                     android:id="@+id/imageSlider"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    app:imageSliderImages="@{helsinkiItem.description.images}"
                     app:iss_auto_cycle="true"
                     app:iss_corner_radius="12"
                     app:iss_delay="0"

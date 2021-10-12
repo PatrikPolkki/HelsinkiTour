@@ -2,6 +2,7 @@ package fi.joonaun.helsinkitour.ui.map
 
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.network.Helsinki
@@ -18,6 +19,9 @@ class MapViewModel(context: Context) : ViewModel() {
         }
     }
 
+    init {
+        Log.d("MAPVIEWMODEL", "ON")
+    }
     val userLocation: LiveData<Location?>
         get() = mUserLocation
 

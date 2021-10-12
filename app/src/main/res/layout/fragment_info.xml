@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="helsinkiItem"
             type="fi.joonaun.helsinkitour.network.Helsinki" />
@@ -26,6 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="260dp"
                 android:elevation="100dp"
+                app:imageSliderImages="@{helsinkiItem.description.images}"
                 app:iss_auto_cycle="true"
                 app:iss_delay="0"
                 app:iss_error_image="@drawable/ic_baseline_error_outline_24"
@@ -63,8 +63,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:text="@{helsinkiItem.getLocaleName()}"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/favouriteCheckBox"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -78,12 +76,12 @@
                         android:layout_height="wrap_content"
                         android:button="@drawable/sl_favourite_24dp"
                         android:buttonTint="#ffbc00"
-                        android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/bubble_title"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
@@ -92,11 +90,10 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/descriptionStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/SubcontentStyle"
                         android:text="@{helsinkiItem.description.body ?? helsinkiItem.description.intro}"
-                        android:textSize="20sp"
                         tools:text="Kaffecentralen is a Finnish company specialised in espresso coffee and -machines. Espresso based coffee drinks to go or to enjoy at the shop." />
                 </LinearLayout>
 
@@ -214,8 +211,7 @@
                             android:id="@+id/txtAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000"
-                            android:textSize="16sp"
+                            style="@style/SubcontentStyle"
                             app:address="@{helsinkiItem.location.address}"
                             tools:text="@string/address_street_city" />
                     </LinearLayout>
@@ -240,7 +236,7 @@
 
                         <TextView
                             android:id="@+id/txtInfoUrl"
-                            android:textSize="16sp"
+                            style="@style/SubcontentStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:url="@{helsinkiItem.infoUrl}"

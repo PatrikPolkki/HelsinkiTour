@@ -3,6 +3,7 @@ package fi.joonaun.helsinkitour.ui.map
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
@@ -34,6 +35,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.infowindow.InfoWindow
+import kotlin.math.roundToInt
 
 
 class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: MarkerClickListener) :
@@ -83,7 +85,8 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
 
         favourites()
         addPolyline()
-        imageSlider()
+
+        mMapView.setMapCenterOffset(0, (mMapView.height / 2.5).roundToInt())
 
         val bubbleReadMore = mView.findViewById<Button>(R.id.readMoreButton)
         bubbleReadMore.setOnClickListener {
@@ -95,14 +98,6 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
         Log.d("ONCLOSE", "TOIMII")
         mMapView.overlays.remove(mapListener)
         mMapView.overlays.remove(roadOverlay)
-    }
-
-    private fun imageSlider() {
-        val imageList: MutableList<SlideModel> = mutableListOf()
-        selectedMarker.helsinki.description.images?.forEach {
-            imageList.add(SlideModel(it.url, "", ScaleTypes.CENTER_CROP))
-        }
-        mView.findViewById<ImageSlider>(R.id.imageSlider).setImageList(imageList)
     }
 
     private fun readMore() {

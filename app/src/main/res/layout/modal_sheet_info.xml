@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="8dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,20 +30,8 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFavorite"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/favorite"
-                    app:favorite="@{viewModel.favorite != null ? true : false}"
-                    app:icon="@drawable/ic_baseline_star_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShowOnMap"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/showOnMap"
@@ -53,184 +40,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/txtTitle"
-                style="@style/SubtitleStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@{helsinkiItem.getLocaleName()}"
-                tools:text="Title" />
 
-            <TextView
-                android:id="@+id/txtBody"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{helsinkiItem.description.body}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtTitle"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id maximus est. Nam luctus elementum pulvinar. Sed consectetur erat vel odio sodales, vel efficitur justo hendrerit. Integer urna augue, aliquet tempus tempor quis, euismod vel metus. Quisque pulvinar nunc eu eleifend ultricies. In hac habitasse platea dictumst. Praesent pulvinar lacus at neque feugiat imperdiet. Suspendisse ultricies maximus ultrices. " />
-
-            <LinearLayout
-                android:id="@+id/layoutPlace"
-                style="@style/SublayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:showIfPlace="@{helsinkiItem}">
-
-                <TextView
-                    android:id="@+id/txtOpeningHoursTitle"
-                    style="@style/SubtitleStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/opening_hours_title" />
-
-                <TextView
-                    android:id="@+id/txtHours"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hours="@{helsinkiItem}"
-                    tools:text="Open 24/7" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutActivity"
-                style="@style/SublayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:showIfActivity="@{helsinkiItem}"
-                app:showIfHasDuration="@{helsinkiItem}">
-
-                <TextView
-                    android:id="@+id/txtWhenWhenTitle"
-                    style="@style/SubtitleStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/duration" />
-
-                <TextView
-                    android:id="@+id/txtWhereWhen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:whereAndWhen="@{helsinkiItem}"
-                    tools:text="30 min" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutEvent"
-                style="@style/SublayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:showIfEvent="@{helsinkiItem}">
-
-                <TextView
-                    android:id="@+id/txtEventDatesTitle"
-                    style="@style/SubtitleStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_dates_title" />
-
-                <TextView
-                    android:id="@+id/txtEventDates"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:eventDates="@{helsinkiItem}"
-                    tools:text="@string/event_dates" />
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="198dp" />
-
-                <LinearLayout
-                    android:id="@+id/layoutAddress"
-                    style="@style/SublayoutStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/txtAddressTitle"
-                        style="@style/SubtitleStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/address" />
-
-                    <TextView
-                        android:id="@+id/txtAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:address="@{helsinkiItem.location.address}"
-                        tools:text="@string/address_street_city" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutMoreInfo"
-                    style="@style/SublayoutStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/txtMoreInfo"
-                        style="@style/SubtitleStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/more_info" />
-
-                    <TextView
-                        android:id="@+id/txtInfoUrl"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:url="@{helsinkiItem.infoUrl}"
-                        tools:text="https://www.google.fi" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/txtImages"
-                style="@style/SubtitleStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sublayout_margin_top"
-                android:text="@string/images"
-                app:recyclerViewImages="@{helsinkiItem.description.images}" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvImages"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:recyclerViewImages="@{helsinkiItem.description.images}"
-                app:spanCount="2"
-                tools:listitem="@layout/single_image" />
-
+        <include android:id="@+id/sheet" layout="@layout/fragment_info" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:helsinkiItem="@{helsinkiItem}"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
