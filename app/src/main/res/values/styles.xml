@@ -13,7 +13,7 @@
     <style name="SubcontentStyle.Padding" parent="SubcontentStyle">
         <item name="android:paddingStart">20dp</item>
     </style>
-    
+
     <style name="TitleStyle" parent="android:TextAppearance.Material.Small">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/subtitle_margin_bottom</item>
@@ -112,5 +112,9 @@
     <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:buttonTint">@color/accent</item>
         <item name="android:button">@drawable/sl_favourite_24dp</item>
+    </style>
+    <style name="roundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

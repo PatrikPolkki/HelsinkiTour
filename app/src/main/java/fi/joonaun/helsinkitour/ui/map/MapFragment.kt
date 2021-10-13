@@ -105,6 +105,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         setMap()
         initFirstObserver()
 
+        requestLocation()
         addGpsListener()
 
         binding.MapChipGroup.setOnCheckedChangeListener(this)
@@ -160,9 +161,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         ) {
-            val location: Unit =
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            Log.d("UNIT", location.toString())
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
         }
     }
 
