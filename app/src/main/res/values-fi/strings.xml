@@ -34,4 +34,6 @@
     <string name="what_map">Mitä haluat tehdä?</string>
     <string name="navigate">Navigoi</string>
     <string name="show">Näytä</string>
+    <string name="do_you_want_open_gps">Haluatko avata sijainti asetukset?</string>
+    <string name="gps_not_enabled">GPS ei ole päällä</string>
 </resources>

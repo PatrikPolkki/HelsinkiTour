@@ -45,4 +45,6 @@
     <string name="what_map">What you wanna do?</string>
     <string name="navigate">Navigate</string>
     <string name="show">Show</string>
+    <string name="do_you_want_open_gps">Do you want open location setting?</string>
+    <string name="gps_not_enabled">GPS is not enabled</string>
 </resources>
