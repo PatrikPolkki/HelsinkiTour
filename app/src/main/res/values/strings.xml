@@ -10,7 +10,6 @@
     <string name="places">Places</string>
 
     <string name="hint_search">What you want to search?</string>
-    <string name="images">Images</string>
     <string name="event_dates_title">Event dates</string>
     <string name="event_dates" translatable="false">%s - %s</string>
     <string name="event_date_time" translatable="false">%s %s-%s</string>
@@ -32,16 +31,13 @@
     <string name="opening_hours" translatable="false">%s-%s</string>
     <string name="closed">Closed</string>
     <string name="open_24">Open 24h</string>
-    <string name="favorite">Favorite</string>
     <string name="step_count">Total steps: %d</string>
     <string name="favorites">Favorites</string>
     <string name="showOnMap">Show on map</string>
 
     <string name="user_location_fab">Get user location button</string>
-    <string name="marker_window_description">Marker Description</string>
     <string name="marker_window_read_more_btn">Read More</string>
     <string name="marker_window_address">Address</string>
-    <string name="marker_window_url">More Info</string>
     <string name="what_map">What you want to do?</string>
     <string name="navigate">Navigate</string>
     <string name="show">Show</string>

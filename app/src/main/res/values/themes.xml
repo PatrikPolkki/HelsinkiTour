@@ -17,7 +17,6 @@
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationStyle</item>
         <item name="toolbarStyle">@style/CustomToolBarStyle</item>
         <item name="floatingActionButtonStyle">@style/CustomFabStyle</item>
-        <item name="android:windowBackground">@color/window_background_day</item>
         <item name="chipStyle">@style/ChipStyle</item>
         <item name="materialButtonOutlinedStyle">@style/OutlinedButtonStyle</item>
         <item name="textAppearanceButton">@style/TextButtonStyle</item>

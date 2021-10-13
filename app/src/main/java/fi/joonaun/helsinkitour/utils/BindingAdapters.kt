@@ -7,36 +7,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
-import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.network.*
-import fi.joonaun.helsinkitour.ui.search.bottomsheet.ImageRecyclerViewAdapter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-/**
- * Hides [view] if [images] is null or empty.
- * If [view] is [RecyclerView] sets it adapter to [ImageRecyclerViewAdapter]
- * and add [images] to that.
- */
-@BindingAdapter("recyclerViewImages")
-fun bindShowImages(view: View, images: List<Image>?) {
-    if (images == null || images.isEmpty()) {
-        view.visibility = View.GONE
-        return
-    }
-
-    if (view is RecyclerView) {
-        view.adapter = ImageRecyclerViewAdapter()
-        val adapter = (view.adapter as ImageRecyclerViewAdapter)
-        adapter.addImages(images)
-    }
-}
 
 /**
  * If [image] is used then load it to [view].
@@ -215,18 +193,6 @@ fun bindHours(view: TextView, item: Helsinki?) {
     }
 
     view.text = text
-}
-
-/**
- * If [favorite] is true then show checkMark, otherwise show star
- */
-@BindingAdapter("favorite")
-fun bindFavorite(view: MaterialButton, favorite: Boolean) {
-    if (favorite) {
-        view.setIconResource(R.drawable.ic_baseline_check_24)
-    } else {
-        view.setIconResource(R.drawable.ic_baseline_star_24)
-    }
 }
 
 /**
