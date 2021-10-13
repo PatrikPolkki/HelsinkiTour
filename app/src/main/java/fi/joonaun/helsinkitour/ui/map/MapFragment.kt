@@ -2,17 +2,20 @@ package fi.joonaun.helsinkitour.ui.map
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.GnssStatus
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -40,7 +43,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -171,6 +173,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     override fun onLocationChanged(p0: Location) {
         Log.d("LOCATION", "${p0.latitude}, ${p0.longitude}")
         viewModel.setUserLocation(p0)
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        locationManager.removeUpdates(this)
     }
 
     private val distanceObserver = Observer<Location?> { vmLocation ->
@@ -369,7 +375,17 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         when (it) {
             binding.fabLocation -> {
                 Log.d("FAB", "WORKS")
-                getUserLoc()
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
+                        LocationManager.GPS_PROVIDER
+                    )
+                ) {
+                    getUserLoc()
+                } else {
+                    displayPromptForEnablingGPS()
+                }
             }
         }
     }
@@ -409,4 +425,24 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             )
         }
     }
+
+    private fun displayPromptForEnablingGPS() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.gps_not_enabled)
+            .setMessage(R.string.do_you_want_open_gps)
+            .setPositiveButton(android.R.string.ok) { d, _ ->
+                gpsResult.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                d.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { d, _ -> d.cancel() }
+            .create()
+            .show()
+    }
+
+    private val gpsResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                getUserLoc()
+            }
+        }
 }
