@@ -3,16 +3,12 @@ package fi.joonaun.helsinkitour.ui.map
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
 import fi.joonaun.helsinkitour.BR
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.AppDatabase
@@ -37,7 +33,6 @@ import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 import kotlin.math.roundToInt
 
-
 class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: MarkerClickListener) :
     InfoWindow(R.layout.info_window, mapView), MapListener {
     private lateinit var roadOverlay: Polyline
@@ -55,7 +50,6 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
         }
     })
 
-
     private val mapLi = object : MapListener {
         override fun onScroll(event: ScrollEvent?): Boolean {
             Log.d("MapLi", "TOIMIIII")
@@ -66,7 +60,6 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
             Log.d("MapLi", "TOIMIIII")
             return true
         }
-
     }
 
     override fun onOpen(item: Any?) {

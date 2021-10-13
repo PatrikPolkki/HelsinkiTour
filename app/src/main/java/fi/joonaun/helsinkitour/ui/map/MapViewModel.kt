@@ -2,7 +2,6 @@ package fi.joonaun.helsinkitour.ui.map
 
 import android.content.Context
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.network.Helsinki
@@ -21,7 +20,6 @@ class MapViewModel(context: Context) : ViewModel() {
 
     val userLocation: LiveData<Location?>
         get() = mUserLocation
-
 
     private val mHelsinkiList: MutableLiveData<List<Helsinki>> by lazy {
         MutableLiveData<List<Helsinki>>().also { it.value = listOf() }

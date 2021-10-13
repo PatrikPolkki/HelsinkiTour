@@ -31,8 +31,10 @@ class NavigatorHelper(private val context: Context, private val navController: N
 
     private fun navigate(item: Helsinki) {
         try {
-            val uri = Uri.parse("https://www.google.com/maps/dir/?api=1" +
-                    "&destination=${item.location.lat},${item.location.lon}")
+            val uri = Uri.parse(
+                "https://www.google.com/maps/dir/?api=1" +
+                        "&destination=${item.location.lat},${item.location.lon}"
+            )
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.setPackage("com.google.android.apps.maps")
             context.startActivity(intent)

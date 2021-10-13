@@ -1,32 +1,21 @@
 package fi.joonaun.helsinkitour.ui.search.bottomsheet
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import fi.joonaun.helsinkitour.MainViewModel
-import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
-import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.utils.NavigatorHelper
-import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
-import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.osmdroid.util.BoundingBox
 
 class InfoBottomSheet : BottomSheetDialogFragment() {
 

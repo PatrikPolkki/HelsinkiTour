@@ -102,7 +102,10 @@ fun bindEventDates(view: TextView, item: Helsinki?) {
 @BindingAdapter("whereAndWhen")
 fun bindWhereAndWhen(view: TextView, item: Helsinki?) {
     if (item is Activity) {
-        view.text = view.context.getString(R.string.duration_time, item.whereWhenDuration.duration.toString())
+        view.text = view.context.getString(
+            R.string.duration_time,
+            item.whereWhenDuration.duration.toString()
+        )
     }
 }
 
@@ -166,6 +169,7 @@ fun bindAddress(view: TextView, address: Address?) {
         address.locality
     )
 }
+
 @BindingAdapter("marker_address")
 fun bindMarkerAddress(view: TextView, address: Address?) {
     address ?: return

@@ -1,18 +1,13 @@
 package fi.joonaun.helsinkitour.ui.map.infofragment
 
-import android.app.AlertDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import fi.joonaun.helsinkitour.MainViewModel
@@ -25,7 +20,6 @@ import fi.joonaun.helsinkitour.utils.NavigatorHelper
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.launch
-import org.osmdroid.util.BoundingBox
 
 class InfoFragment : Fragment(R.layout.fragment_info) {
     private lateinit var binding: FragmentInfoBinding

@@ -62,6 +62,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     companion object {
         private var addMarkerJob = Job()
     }
+
     private lateinit var binding: FragmentMapBinding
     private lateinit var locationManager: LocationManager
     private lateinit var userMarker: Marker
@@ -159,7 +160,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
+                LocationManager.GPS_PROVIDER
+            )
         ) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
         }
@@ -283,7 +286,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 try {
                     val marker = Marker(binding.map)
                     marker.apply {
-                        icon = when(point) {
+                        icon = when (point) {
                             is Activity -> AppCompatResources.getDrawable(
                                 requireContext(),
                                 R.drawable.marker_activity
@@ -398,10 +401,12 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         val argBounds = arguments?.get("bounds") as? BoundingBox ?: return
         argBounds.apply {
             binding.map.controller.zoomToSpan(latNorth - latSouth, lonWest - lonEast)
-            binding.map.controller.setCenter(GeoPoint(
-                (latNorth + latSouth) / 2.0,
-                (lonWest + lonEast) / 2.0
-            ))
+            binding.map.controller.setCenter(
+                GeoPoint(
+                    (latNorth + latSouth) / 2.0,
+                    (lonWest + lonEast) / 2.0
+                )
+            )
         }
     }
 }
