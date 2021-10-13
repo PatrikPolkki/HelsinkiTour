@@ -16,7 +16,7 @@
             android:id="@+id/linearLayout4"
             android:layout_width="0dp"
             android:layout_height="250dp"
-            android:background="@color/blue"
+            android:background="@color/primary"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout8"

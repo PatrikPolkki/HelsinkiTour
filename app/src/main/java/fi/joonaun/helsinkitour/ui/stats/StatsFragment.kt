@@ -185,17 +185,17 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
                 Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY
             )
         ) {
-            try {
-                lifecycleScope.launch(Dispatchers.Default) {
+            lifecycleScope.launch(Dispatchers.Default) {
+                try {
                     val file =
                         File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME)
                     val bitmap = byteArrayToBitmap(file.readBytes())
                     withContext(Dispatchers.Main) {
                         binding.userImageView.setImageBitmap(bitmap)
                     }
+                } catch (e: Exception) {
+                    Log.e("ERROR", e.toString())
                 }
-            } catch (e: Exception) {
-                Log.e("ERROR", e.toString())
             }
         }
     }
