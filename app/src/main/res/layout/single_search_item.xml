@@ -42,23 +42,23 @@
 
         <TextView
             android:id="@+id/txtSingleTitle"
+            style="?attr/textAppearanceHeadline3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:text="@{helsinkiItem.getLocaleName()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{helsinkiItem.getLocaleName()}"
             tools:text="Title here" />
 
         <TextView
             android:id="@+id/txtSingleDescription"
+            style="?attr/textAppearanceBody2"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"

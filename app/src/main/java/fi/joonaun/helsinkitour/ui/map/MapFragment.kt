@@ -9,7 +9,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +29,7 @@ import com.google.android.material.chip.ChipGroup
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.databinding.FragmentMapBinding
-import fi.joonaun.helsinkitour.network.Helsinki
-import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import fi.joonaun.helsinkitour.network.*
 import fi.joonaun.helsinkitour.utils.getTodayDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -94,10 +92,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             icon = AppCompatResources.getDrawable(
                 requireContext(),
                 R.drawable.ic_baseline_person_pin_circle_24
-            )?.also {
-                it.setTint(Color.DKGRAY)
-            }
+            )
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            infoWindow = null
         }
         binding.map.apply {
             overlays.add(userMarker)
@@ -108,6 +105,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         setMap()
         initFirstObserver()
 
+        requestLocation()
         addGpsListener()
 
         binding.MapChipGroup.setOnCheckedChangeListener(this)
@@ -163,9 +161,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         ) {
-            val location: Unit =
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this)
-            Log.d("UNIT", location.toString())
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
         }
     }
 
@@ -272,9 +268,13 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             }
             val allMarkers = RadiusMarkerClusterer(requireContext())
             val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_star_24)
-            drawable?.setTint(Color.BLACK)
-            allMarkers.setIcon(drawable?.toBitmap(200, 200))
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_circle_24)
+
+            val density = requireContext().resources.displayMetrics.density
+            val iconSize = (60 * density).roundToInt()
+
+            allMarkers.setIcon(drawable?.toBitmap(iconSize, iconSize))
+            allMarkers.setRadius(iconSize)
 
             val myInfoWindow = MyMarkerWindow(binding.map, this@MapFragment)
             val userLocation: LiveData<Location?> = viewModel.userLocation
@@ -283,11 +283,19 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 try {
                     val marker = Marker(binding.map)
                     marker.apply {
-                        icon = AppCompatResources.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_baseline_place_24
-                        )?.also {
-                            it.setTint(Color.DKGRAY)
+                        icon = when(point) {
+                            is Activity -> AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.marker_activity
+                            )
+                            is Event -> AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.marker_event
+                            )
+                            else -> AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.marker_place
+                            )
                         }
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                         position = GeoPoint(point.location.lat, point.location.lon)

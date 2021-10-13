@@ -20,6 +20,7 @@ import fi.joonaun.helsinkitour.database.Favorite
 import fi.joonaun.helsinkitour.databinding.ModalSheetInfoBinding
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.network.HelsinkiRepository
+import fi.joonaun.helsinkitour.utils.NavigatorHelper
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +67,7 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
             withContext(Dispatchers.Main) {
                 viewModel.setHelsinkiItem(item)
                 viewModel.favorite.observe(viewLifecycleOwner, favoriteObserver)
-                binding.btnShowOnMap.setOnClickListener(showOnMap)
+                binding.sheet.btnShowOnMap.setOnClickListener(showOnMap)
             }
         }
     }
@@ -91,23 +92,8 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
      * Sets bounding box and sends it and list on search results to map
      */
     private val showOnMap = View.OnClickListener {
-        val list = listOf(viewModel.helsinkiItem.value ?: return@OnClickListener)
-
-        val item = list.first()
-        val north = item.location.lat
-        val south = item.location.lat
-        val west = item.location.lon
-        val east = item.location.lon
-
-        val bounds = try {
-            BoundingBox(north, east, south, west)
-        } catch (e: Exception) {
-            Log.e("BOUNDING BOX", "Error: ${e.localizedMessage}")
-            BoundingBox(60.17, 24.95, 60.17, 24.95)
-        }
-        val bundle = bundleOf("helsinkiList" to list, "bounds" to bounds)
-        val navController = findNavController()
-        navController.navigate(R.id.navMap, bundle)
+        NavigatorHelper(requireContext(), findNavController())
+            .showMapDialog(viewModel.helsinkiItem.value ?: return@OnClickListener)
         super.dismiss()
     }
 }

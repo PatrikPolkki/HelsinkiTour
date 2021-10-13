@@ -28,7 +28,6 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/MapChipGroup"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
@@ -42,7 +41,6 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip1"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activities"
@@ -50,7 +48,6 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip2"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/events"
@@ -58,7 +55,6 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip3"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/places"

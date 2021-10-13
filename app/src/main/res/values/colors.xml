@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue">#0090F1</color>
-    <color name="blue_dark">#0063be</color>
-    <color name="blue_light">#65c0ff</color>
-    <color name="yellow">#A5C882</color>
+    <color name="primary">#0090F1</color>
+    <color name="primary_dark">#0063be</color>
     <color name="black">#FF000000</color>
-    <color name="gray">#A4A4A4</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <color name="window_background_day">#EBF2FA</color>
+
+    <color name="secondary">#CA3CFF</color>
+    <color name="secondary_variant">#9C27B0</color>
+
+    <color name="accent">#ffbc00</color>
+
+    <color name="user_marker">#2196F3</color>
+    <color name="activity_marker">#9C27B0</color>
+    <color name="event_marker">#E91E63</color>
+    <color name="place_marker">#FFEB3B</color>
+    <color name="cluster_marker">#606060</color>
 </resources>
