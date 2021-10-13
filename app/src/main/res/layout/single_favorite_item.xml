@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
+        android:screenReaderFocusable="true"
         app:cardCornerRadius="8dp">
 
         <ImageView
@@ -24,6 +25,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:importantForAccessibility="no"
+            android:focusable="false"
             android:scaleType="fitCenter"
             app:image="@{favoriteItem.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -47,6 +50,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:focusable="false"
             style="?attr/textAppearanceHeadline3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline2"
@@ -57,6 +61,7 @@
         <TextView
             android:id="@+id/txtSingleDescription"
             style="?attr/textAppearanceBody2"
+            android:focusable="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

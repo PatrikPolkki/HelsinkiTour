@@ -7,7 +7,6 @@
     <string name="events">Tapahtumat</string>
     <string name="places">Paikat</string>
     <string name="hint_search">Mitä haluat etsiä?</string>
-    <string name="images">Kuvat</string>
     <string name="event_dates_title">Tapahtuman aika</string>
     <string name="duration">Kesto</string>
     <string name="address">Osoite</string>
@@ -22,15 +21,12 @@
     <string name="sunday">Sunnuntai</string>
     <string name="closed">Suljettu</string>
     <string name="open_24">Auki 24h</string>
-    <string name="favorite">Suosikki</string>
     <string name="step_count">Askeleet  yhteensä: %d</string>
     <string name="favorites">Suosikit</string>
     <string name="showOnMap">Näytä kartalla</string>
     <string name="user_location_fab">Käyttäjän sijainti painike</string>
-    <string name="marker_window_description">Kuvaus</string>
     <string name="marker_window_read_more_btn">Lue lisää</string>
     <string name="marker_window_address">Osoite</string>
-    <string name="marker_window_url">Lisätietoja</string>
     <string name="what_map">Mitä haluat tehdä?</string>
     <string name="navigate">Navigoi</string>
     <string name="show">Näytä</string>
