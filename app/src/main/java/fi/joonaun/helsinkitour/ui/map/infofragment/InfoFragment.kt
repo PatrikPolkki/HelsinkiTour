@@ -1,25 +1,31 @@
 package fi.joonaun.helsinkitour.ui.map.infofragment
 
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
 import fi.joonaun.helsinkitour.MainViewModel
 import fi.joonaun.helsinkitour.MainViewModelFactory
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.databinding.FragmentInfoBinding
 import fi.joonaun.helsinkitour.utils.HelsinkiType
+import fi.joonaun.helsinkitour.utils.NavigatorHelper
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.launch
+import org.osmdroid.util.BoundingBox
 
 class InfoFragment : Fragment(R.layout.fragment_info) {
     private lateinit var binding: FragmentInfoBinding
@@ -34,8 +40,13 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentInfoBinding.inflate(layoutInflater)
-        initUI()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUI()
+        initAddressClickListener()
     }
 
     private fun initUI() {
@@ -67,6 +78,13 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                     }
                 }
             }
+        }
+    }
+
+    private fun initAddressClickListener() {
+        binding.btnShowOnMap.setOnClickListener {
+            NavigatorHelper(requireContext(), findNavController())
+                .showMapDialog(binding.helsinkiItem ?: return@setOnClickListener)
         }
     }
 }

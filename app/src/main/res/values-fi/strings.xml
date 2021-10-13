@@ -31,4 +31,7 @@
     <string name="marker_window_read_more_btn">Lue lisää</string>
     <string name="marker_window_address">Osoite</string>
     <string name="marker_window_url">Lisätietoja</string>
+    <string name="what_map">Mitä haluat tehdä?</string>
+    <string name="navigate">Navigoi</string>
+    <string name="show">Näytä</string>
 </resources>

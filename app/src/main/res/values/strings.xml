@@ -42,4 +42,7 @@
     <string name="marker_window_read_more_btn">Read More</string>
     <string name="marker_window_address">Address</string>
     <string name="marker_window_url">More Info</string>
+    <string name="what_map">What you wanna do?</string>
+    <string name="navigate">Navigate</string>
+    <string name="show">Show</string>
 </resources>
