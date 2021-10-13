@@ -7,14 +7,13 @@
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/secondary_dark</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
         <item name="fontFamily">@font/nunito</item>
-        <item name="android:textAppearance">@style/CustomTextViewStyleNight</item>
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationStyle</item>
         <item name="toolbarStyle">@style/CustomToolBarStyle</item>
         <item name="floatingActionButtonStyle">@style/CustomFabStyle</item>

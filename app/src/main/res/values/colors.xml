@@ -6,8 +6,11 @@
     <color name="white">#FFFFFFFF</color>
     
     <color name="window_background_day">#EBF2FA</color>
-    <color name="secondary">#35524A</color>
-    <color name="secondary_dark">#283E38</color>
+
+    <color name="secondary">#CA3CFF</color>
+    <color name="secondary_variant">#9C27B0</color>
+
+    <color name="accent">#ffbc00</color>
 
     <color name="user_marker">#2196F3</color>
     <color name="activity_marker">#9C27B0</color>
