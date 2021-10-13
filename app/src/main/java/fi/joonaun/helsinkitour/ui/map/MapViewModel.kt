@@ -19,9 +19,6 @@ class MapViewModel(context: Context) : ViewModel() {
         }
     }
 
-    init {
-        Log.d("MAPVIEWMODEL", "ON")
-    }
     val userLocation: LiveData<Location?>
         get() = mUserLocation
 
