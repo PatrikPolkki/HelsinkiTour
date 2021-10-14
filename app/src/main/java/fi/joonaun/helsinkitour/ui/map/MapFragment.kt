@@ -152,25 +152,28 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun addGpsListener() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationManager.registerGnssStatusCallback(gps, null)
+        context?.let {
+            if (ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                locationManager.registerGnssStatusCallback(gps, null)
+            }
         }
-
     }
 
     private fun requestLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
-                LocationManager.GPS_PROVIDER
-            )
-        ) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
+        context?.let {
+            if (ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
+                    LocationManager.GPS_PROVIDER
+                )
+            ) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
+            }
         }
     }
 
