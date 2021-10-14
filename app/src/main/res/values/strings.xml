@@ -31,7 +31,8 @@
     <string name="opening_hours" translatable="false">%s-%s</string>
     <string name="closed">Closed</string>
     <string name="open_24">Open 24h</string>
-    <string name="step_count">Total steps: %d</string>
+    <string name="favorite">Favorite</string>
+    <string name="step_count" translatable="false">%d</string>
     <string name="favorites">Favorites</string>
     <string name="showOnMap">Show on map</string>
 
@@ -43,4 +44,8 @@
     <string name="show">Show</string>
     <string name="do_you_want_open_gps">Do you want open location setting?</string>
     <string name="gps_not_enabled">GPS is not enabled</string>
+    <string name="distance" translatable="false">%d</string>
+    <string name="steps_title">Total Steps</string>
+    <string name="distance_title">Total Distance</string>
+    <string name="add_name_hint">Add name</string>
 </resources>

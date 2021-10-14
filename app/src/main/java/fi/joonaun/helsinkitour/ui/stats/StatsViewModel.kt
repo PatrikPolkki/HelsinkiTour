@@ -11,6 +11,7 @@ import fi.joonaun.helsinkitour.utils.HelsinkiType
 class StatsViewModel(context: Context) : ViewModel() {
     private val database = AppDatabase.get(context)
     val totalSteps: LiveData<Int?> = database.statDao().getTotalSteps()
+    val totalDistance: LiveData<Int?> = database.statDao().getTotalDistance()
 
     private val mUsername: MutableLiveData<String> by lazy {
         MutableLiveData<String>().also {

@@ -88,7 +88,7 @@
         <item name="chipStrokeWidth">2dp</item>
         <item name="chipStrokeColor">@color/primary</item>
         <item name="android:textColor">@color/chip_text</item>
-        <item name="chipCornerRadius">8dp</item>
+        <item name="chipCornerRadius">10dp</item>
     </style>
 
     <style name="OutlinedButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">

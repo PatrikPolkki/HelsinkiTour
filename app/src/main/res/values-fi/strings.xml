@@ -21,7 +21,7 @@
     <string name="sunday">Sunnuntai</string>
     <string name="closed">Suljettu</string>
     <string name="open_24">Auki 24h</string>
-    <string name="step_count">Askeleet  yhteensä: %d</string>
+    <string name="favorite">Suosikki</string>
     <string name="favorites">Suosikit</string>
     <string name="showOnMap">Näytä kartalla</string>
     <string name="user_location_fab">Käyttäjän sijainti painike</string>
@@ -32,4 +32,7 @@
     <string name="show">Näytä</string>
     <string name="do_you_want_open_gps">Haluatko avata sijainti asetukset?</string>
     <string name="gps_not_enabled">GPS ei ole päällä</string>
+    <string name="steps_title">Askeleet</string>
+    <string name="distance_title">Kuljettu matka</string>
+    <string name="add_name_hint">Lisää nimi</string>
 </resources>

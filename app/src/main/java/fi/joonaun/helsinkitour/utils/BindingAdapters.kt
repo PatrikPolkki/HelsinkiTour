@@ -203,6 +203,14 @@ fun bindTotalSteps(view: TextView, steps: Int?) {
     val text = view.context.getString(R.string.step_count, steps ?: 0)
     view.text = text
 }
+/**
+ * Show [distance] on [view]
+ */
+@BindingAdapter("totalDistance")
+fun bindTotalDistance(view: TextView, distance: Int?) {
+    val text = view.context.getString(R.string.distance, distance ?: 0)
+    view.text = text
+}
 
 @BindingAdapter("imageSliderImages")
 fun bindImageSliderImages(view: ImageSlider, images: List<Image>?) {
@@ -216,6 +224,7 @@ fun bindImageSliderImages(view: ImageSlider, images: List<Image>?) {
     else
         view.setImageList(imageList)
 }
+
 
 /**
  * @return weekdays name based on [id]
@@ -244,7 +253,6 @@ private fun loadSmallImage(view: ImageView, url: String) {
         .error(R.drawable.ic_baseline_error_outline_24)
         .into(view)
 }
-
 /**
  * Converts [input] to [LocalDateTime]
  */

@@ -128,6 +128,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     override fun onDestroy() {
         super.onDestroy()
         savePref()
+    }
+
+    override fun onPause() {
+        super.onPause()
         mainViewModel.mapLocation = MapLocation(
             binding.map.mapCenter.latitude,
             binding.map.mapCenter.longitude,
@@ -166,7 +170,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 LocationManager.GPS_PROVIDER
             )
         ) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
         }
     }
 
@@ -382,6 +386,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                         LocationManager.GPS_PROVIDER
                     )
                 ) {
+                    requestLocation()
                     getUserLoc()
                 } else {
                     displayPromptForEnablingGPS()
