@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -125,10 +126,15 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
             binding.usernameEditText.visibility = View.GONE
             viewModel.setUsername(binding.usernameEditText.text.toString())
             editProfileBoolean = false
+            hideKeyboard()
             false
         }
     }
 
+    private fun hideKeyboard() {
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
 
     private fun addImage() {
         if (editProfileBoolean) {
