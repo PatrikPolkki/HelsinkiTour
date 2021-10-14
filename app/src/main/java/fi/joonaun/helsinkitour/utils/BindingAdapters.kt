@@ -39,14 +39,6 @@ fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<
 }
 
 /**
- * Load [url] to [view]
- */
-@BindingAdapter("imageUrl")
-fun bindShowImage(view: ImageView, url: String) {
-    loadSmallImage(view, url)
-}
-
-/**
  * If [item] is [Event] then show event dates on [view]
  */
 @BindingAdapter("eventDates")
@@ -148,6 +140,9 @@ fun bindAddress(view: TextView, address: Address?) {
     )
 }
 
+/**
+ * Bind [address] to [view] text value
+ */
 @BindingAdapter("marker_address")
 fun bindMarkerAddress(view: TextView, address: Address?) {
     address ?: return
@@ -213,6 +208,9 @@ fun bindTotalDistance(view: TextView, distance: Int?) {
     view.text = text
 }
 
+/**
+ * Bind [images] to [view]
+ */
 @BindingAdapter("imageSliderImages")
 fun bindImageSliderImages(view: ImageSlider, images: List<Image>?) {
     val imageList: MutableList<SlideModel> = mutableListOf()
