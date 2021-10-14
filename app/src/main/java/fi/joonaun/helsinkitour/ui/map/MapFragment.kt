@@ -159,7 +159,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         ) {
             locationManager.registerGnssStatusCallback(gps, null)
         }
-
     }
 
     private fun requestLocation() {

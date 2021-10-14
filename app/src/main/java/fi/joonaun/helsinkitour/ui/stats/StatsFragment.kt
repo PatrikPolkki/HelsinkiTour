@@ -105,10 +105,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuEditProfile -> {
-                if (editProfile()) {
-                    item.title = "SAVE"
-                } else {
-                    item.title = "EDIT"
+                item.title = when (editProfile()) {
+                    true -> getString(R.string.save)
+                    false -> getString(R.string.edit)
                 }
             }
         }
@@ -135,12 +134,12 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         if (editProfileBoolean) {
             val builder = AlertDialog.Builder(context ?: return)
             builder.apply {
-                builder.setMessage("Add Image")
-                setPositiveButton("Gallery") { _, _ ->
+                builder.setMessage(R.string.add_image)
+                setPositiveButton(R.string.from_gallery) { _, _ ->
                     galleryImage()
                 }
-                setNegativeButton("Take Photo") { _, _ ->
-                    takePhoto()
+                setNegativeButton(R.string.take_photo) { _, _ ->
+                    askCameraPermission()
                 }
             }
             builder.create()
@@ -167,18 +166,34 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     }
 
+    private val cameraPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                takePhoto()
+            }
+        }
+
+    private fun askCameraPermission() {
+        val camPerm = Manifest.permission.CAMERA
+
+        val pm = activity?.packageManager ?: return
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) return
+
+        context?.let {
+            when (PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(it, camPerm)
+                -> takePhoto()
+                else -> cameraPermissionRequest.launch(camPerm)
+            }
+        }
+    }
 
     private fun takePhoto() {
-        if (ContextCompat.checkSelfPermission(
-                context ?: return,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            val fileName = "profile_photo"
-            val imgPath = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return
-            val imageFile: File? = File.createTempFile(fileName, ".jpg", imgPath)
+        val fileName = "profile_photo"
+        val imgPath = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile: File = File.createTempFile(fileName, ".jpg", imgPath) ?: return
 
-            takePhotoPath = imageFile!!.absolutePath
+        takePhotoPath = imageFile.absolutePath
 
             val photoURI: Uri = FileProvider.getUriForFile(
                 context ?: return,
@@ -186,7 +201,6 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
                 imageFile
             )
             takePicture.launch(photoURI)
-        }
     }
 
     private var takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) {
