@@ -91,6 +91,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        // make new usermarker and add it to map
         userMarker = Marker(binding.map)
         userMarker.apply {
             icon = AppCompatResources.getDrawable(
@@ -131,6 +132,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         savePref()
     }
 
+    /**
+     * store [MapLocation] to [mainViewModel]
+     */
     override fun onPause() {
         super.onPause()
         mainViewModel.mapLocation = MapLocation(
@@ -140,6 +144,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         )
     }
 
+    /**
+     *  [gps] callback reacts gps status changes
+     */
     private val gps = object : GnssStatus.Callback() {
         override fun onStarted() {
             super.onStarted()
@@ -152,6 +159,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * add [gps] callback to [locationManager]
+     */
     private fun addGpsListener() {
         if (ActivityCompat.checkSelfPermission(
                 context ?: return,
@@ -162,6 +172,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * start requesting locations.
+     */
     private fun requestLocation() {
         if (ActivityCompat.checkSelfPermission(
                 context ?: return,
@@ -174,15 +187,26 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * set new location to [viewModel]
+     */
     override fun onLocationChanged(p0: Location) {
         Log.d("LOCATION", "${p0.latitude}, ${p0.longitude}")
         viewModel.setUserLocation(p0)
     }
 
+    /**
+     * remove updates if gps is disabled
+     */
     override fun onProviderDisabled(provider: String) {
         locationManager.removeUpdates(this)
     }
 
+    /**
+     * observe location from [viewModel]
+     * count distance from last location to new location
+     * insert distance and date to [viewModel] where it is inserted to database
+     */
     private val distanceObserver = Observer<Location?> { vmLocation ->
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
@@ -192,6 +216,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         locDistance = vmLocation
     }
 
+    /**
+     * observe location from [viewModel]
+     * set [userMarker] position to new location
+     */
     private val userMarkerObserver = Observer<Location?> {
         if (it != null) {
             userMarker.position = GeoPoint(it.latitude, it.longitude)
@@ -200,6 +228,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * save location from [viewModel] to sharedPreferences
+     */
     private fun savePref() {
         val preferences =
             activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
@@ -213,6 +244,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         editor.apply()
     }
 
+    /**
+     * get location from sharedPreferences and send it to [viewModel]
+     */
     private fun getPref() {
         val preferences =
             activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
@@ -230,6 +264,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * set up the map and usermarker using [viewModel] location
+     * if location is null center map and usermarker to helsinki coordinates
+     */
     private fun setMap() {
         val userLocation: LiveData<Location?> = viewModel.userLocation
 
@@ -263,6 +301,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * set activity data to [viewModel]
+     */
     private fun initFirstObserver() {
         viewModel.helsinkiList.observe(viewLifecycleOwner, helsinkiObserver)
         lifecycleScope.launch {
@@ -271,6 +312,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
 
+    /**
+     * create markers by list of [Helsinki] items
+     * add markers to cluster which is added to overlay
+     */
     private fun addMarker(pointInfo: List<Helsinki>) {
         addMarkerJob.cancel()
         addMarkerJob = Job()
@@ -329,6 +374,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * observes helsinkiList from [viewModel]
+     * pass list of [Helsinki] to [addMarker] as parameter
+     */
     private val helsinkiObserver = Observer<List<Helsinki>> {
         Log.d("Observer", "${it.size}")
         binding.map.overlays.clear()
@@ -336,6 +385,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
 
+    /**
+     * set certain filter by click on chip
+     */
     override fun onCheckedChanged(group: ChipGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.chip1 -> {
@@ -362,6 +414,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * set map center to userlocation
+     */
     private fun getUserLoc() {
         val userLocation: LiveData<Location?> = viewModel.userLocation
         if (userLocation.value != null) {
@@ -431,6 +486,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         }
     }
 
+    /**
+     * open alert to enable gps
+     */
     private fun displayPromptForEnablingGPS() {
         AlertDialog.Builder(context ?: return)
             .setTitle(R.string.gps_not_enabled)
