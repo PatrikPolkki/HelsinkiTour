@@ -36,7 +36,7 @@
     <string name="favorites">Favorites</string>
     <string name="showOnMap">Show on map</string>
 
-    <string name="user_location_fab">Get user location button</string>
+    <string name="user_location_fab">Get user location</string>
     <string name="marker_window_read_more_btn">Read More</string>
     <string name="marker_window_address">Address</string>
     <string name="what_map">What you want to do?</string>
