@@ -36,7 +36,7 @@
     <string name="favorites">Favorites</string>
     <string name="showOnMap">Show on map</string>
 
-    <string name="user_location_fab">Get user location button</string>
+    <string name="user_location_fab">Get user location</string>
     <string name="marker_window_read_more_btn">Read More</string>
     <string name="marker_window_address">Address</string>
     <string name="what_map">What you want to do?</string>
@@ -50,4 +50,9 @@
     <string name="add_name_hint">Add name</string>
     <string name="dot" translatable="false">•</string>
     <string name="profile_image">Profile Image</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="add_image">Add image</string>
+    <string name="from_gallery">From gallery</string>
+    <string name="take_photo">Take photo</string>
 </resources>

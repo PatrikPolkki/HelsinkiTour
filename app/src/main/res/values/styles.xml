@@ -11,7 +11,7 @@
     <style name="TitleStyle" parent="android:TextAppearance.Material.Small">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/subtitle_margin_bottom</item>
-        <item name="android:textAllCaps">false</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="H1Style" parent="TitleStyle">
@@ -40,7 +40,7 @@
 
     <style name="H3Style" parent="TitleStyle">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/secondary</item>
+        <item name="android:textColor">@color/primary_dark</item>
     </style>
 
     <style name="TextBodyStyle" parent="android:TextAppearance.Material.Small">
@@ -99,9 +99,10 @@
     </style>
 
     <style name="TextButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/secondary</item>
-        <item name="iconTint">@color/secondary</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="iconTint">@color/primary</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">

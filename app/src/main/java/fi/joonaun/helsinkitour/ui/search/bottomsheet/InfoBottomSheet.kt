@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 class InfoBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel: InfoBottomSheetViewModel by viewModels {
-        InfoBottomSheetViewModelFactory(requireContext(), arguments?.get("id") as String)
+        InfoBottomSheetViewModelFactory(context, arguments?.get("id") as String)
     }
     private lateinit var binding: ModalSheetInfoBinding
 
@@ -81,7 +81,7 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
      * Sets bounding box and sends it and list on search results to map
      */
     private val showOnMap = View.OnClickListener {
-        NavigatorHelper(requireContext(), findNavController())
+        NavigatorHelper(context ?: return@OnClickListener, findNavController())
             .showMapDialog(viewModel.helsinkiItem.value ?: return@OnClickListener)
         super.dismiss()
     }
