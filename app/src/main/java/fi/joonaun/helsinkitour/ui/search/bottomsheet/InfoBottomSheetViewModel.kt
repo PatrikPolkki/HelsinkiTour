@@ -3,14 +3,15 @@ package fi.joonaun.helsinkitour.ui.search.bottomsheet
 import android.content.Context
 import androidx.lifecycle.*
 import fi.joonaun.helsinkitour.database.AppDatabase
+import fi.joonaun.helsinkitour.database.FavoriteDao
 import fi.joonaun.helsinkitour.network.Helsinki
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
 import fi.joonaun.helsinkitour.utils.deleteFavoriteFromDatabase
 import kotlinx.coroutines.launch
 
 class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
-    private val database = AppDatabase.get(context)
-    private val favoriteDao = database.favoriteDao()
+    private val database: AppDatabase = AppDatabase.get(context)
+    private val favoriteDao: FavoriteDao = database.favoriteDao()
 
     /**
      * Gets favorite from database.
@@ -58,9 +59,10 @@ class InfoBottomSheetViewModel(context: Context, id: String) : ViewModel() {
  * @param context Context for database
  * @param id HelsinkiItems id
  */
-class InfoBottomSheetViewModelFactory(private val context: Context, private val id: String) :
+class InfoBottomSheetViewModelFactory(private val context: Context?, private val id: String) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        context ?: throw NullPointerException("No context")
         if (modelClass.isAssignableFrom(InfoBottomSheetViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return InfoBottomSheetViewModel(context, id) as T

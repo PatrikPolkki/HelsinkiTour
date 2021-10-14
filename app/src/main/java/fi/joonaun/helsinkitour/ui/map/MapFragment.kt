@@ -93,7 +93,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
         userMarker = Marker(binding.map)
         userMarker.apply {
             icon = AppCompatResources.getDrawable(
-                requireContext(),
+                context ?: return@apply,
                 R.drawable.ic_baseline_person_pin_circle_24
             )
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
@@ -152,28 +152,24 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun addGpsListener() {
-        context?.let {
-            if (ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                locationManager.registerGnssStatusCallback(gps, null)
-            }
+        if (ActivityCompat.checkSelfPermission(
+                context ?: return,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            locationManager.registerGnssStatusCallback(gps, null)
         }
     }
 
     private fun requestLocation() {
-        context?.let {
-            if (ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
-                    LocationManager.GPS_PROVIDER
-                )
-            ) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
-            }
+        if (ActivityCompat.checkSelfPermission(
+                context ?: return,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
+                LocationManager.GPS_PROVIDER
+            )
+        ) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
         }
     }
 
@@ -205,7 +201,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private fun savePref() {
         val preferences =
-            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+            activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
         val editor = preferences.edit()
 
         viewModel.userLocation.value?.let {
@@ -218,7 +214,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
 
     private fun getPref() {
         val preferences =
-            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+            activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
         val lat: String? = preferences.getString("LOCATION_LAT", null)
         val lon: String? = preferences.getString("LOCATION_LON", null)
         var location: Location? = null
@@ -282,11 +278,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 overlays.add(userMarker)
                 invalidate()
             }
-            val allMarkers = RadiusMarkerClusterer(requireContext())
+            val allMarkers = RadiusMarkerClusterer(context ?: return@launch)
             val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_circle_24)
+                ContextCompat.getDrawable(context ?: return@launch, R.drawable.ic_baseline_circle_24)
 
-            val density = requireContext().resources.displayMetrics.density
+            val density = context?.resources?.displayMetrics?.density ?: 1f
             val iconSize = (50 * density).roundToInt()
 
             allMarkers.setIcon(drawable?.toBitmap(iconSize, iconSize))
@@ -383,7 +379,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
             binding.fabLocation -> {
                 Log.d("FAB", "WORKS")
                 if (ActivityCompat.checkSelfPermission(
-                        requireContext(),
+                        context ?: return@OnClickListener,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(
                         LocationManager.GPS_PROVIDER
@@ -435,7 +431,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     }
 
     private fun displayPromptForEnablingGPS() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(context ?: return)
             .setTitle(R.string.gps_not_enabled)
             .setMessage(R.string.do_you_want_open_gps)
             .setPositiveButton(android.R.string.ok) { d, _ ->

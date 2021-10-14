@@ -132,7 +132,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     private fun addImage() {
         if (editProfileBoolean) {
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(context ?: return)
             builder.apply {
                 builder.setMessage(R.string.add_image)
                 setPositiveButton(R.string.from_gallery) { _, _ ->
@@ -154,7 +154,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
     private val openGallery = registerForActivityResult(ActivityResultContracts.GetContent()) {
         it ?: return@registerForActivityResult
         val bitmap: Bitmap?
-        val contentResolver = requireContext().contentResolver
+        val contentResolver = context?.contentResolver ?: return@registerForActivityResult
         try {
             val source = ImageDecoder.createSource(contentResolver, it)
             bitmap = ImageDecoder.decodeBitmap(source)
@@ -195,12 +195,12 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
         takePhotoPath = imageFile.absolutePath
 
-        val photoURI: Uri = FileProvider.getUriForFile(
-            requireContext(),
-            "fi.joonaun.helsinkitour.ui.stats.StatsFragment",
-            imageFile
-        )
-        takePicture.launch(photoURI)
+            val photoURI: Uri = FileProvider.getUriForFile(
+                context ?: return,
+                "fi.joonaun.helsinkitour.ui.stats.StatsFragment",
+                imageFile
+            )
+            takePicture.launch(photoURI)
     }
 
     private var takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) {
@@ -278,7 +278,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     private fun savePref() {
         val preferences =
-            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+            activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
         val editor = preferences.edit()
 
         editor.putString("USERNAME", viewModel.username.value)
@@ -287,7 +287,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     private fun getPref() {
         val preferences =
-            requireActivity().getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE)
+            activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
         val username = preferences.getString("USERNAME", "")
 
         viewModel.initUsername(username ?: "")
