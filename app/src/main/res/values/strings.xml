@@ -10,7 +10,6 @@
     <string name="places">Places</string>
 
     <string name="hint_search">What you want to search?</string>
-    <string name="images">Images</string>
     <string name="event_dates_title">Event dates</string>
     <string name="event_dates" translatable="false">%s - %s</string>
     <string name="event_date_time" translatable="false">%s %s-%s</string>
@@ -38,13 +37,13 @@
     <string name="showOnMap">Show on map</string>
 
     <string name="user_location_fab">Get user location button</string>
-    <string name="marker_window_description">Marker Description</string>
     <string name="marker_window_read_more_btn">Read More</string>
     <string name="marker_window_address">Address</string>
-    <string name="marker_window_url">More Info</string>
-    <string name="what_map">What you wanna do?</string>
+    <string name="what_map">What you want to do?</string>
     <string name="navigate">Navigate</string>
     <string name="show">Show</string>
+    <string name="do_you_want_open_gps">Do you want open location setting?</string>
+    <string name="gps_not_enabled">GPS is not enabled</string>
     <string name="distance" translatable="false">%d</string>
     <string name="steps_title">Total Steps</string>
     <string name="distance_title">Total Distance</string>

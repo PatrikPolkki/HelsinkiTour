@@ -17,5 +17,14 @@
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationStyle</item>
         <item name="toolbarStyle">@style/CustomToolBarStyle</item>
         <item name="floatingActionButtonStyle">@style/CustomFabStyle</item>
+        <item name="chipStyle">@style/ChipStyle</item>
+        <item name="materialButtonOutlinedStyle">@style/OutlinedButtonStyle</item>
+        <item name="textAppearanceButton">@style/TextButtonStyle</item>
+        <item name="textAppearanceHeadline1">@style/H1Style.night</item>
+        <item name="textAppearanceHeadline2">@style/H2Style.night</item>
+        <item name="textAppearanceHeadline3">@style/H3Style</item>
+        <item name="textAppearanceBody1">@style/TextBody1Style.night</item>
+        <item name="textAppearanceBody2">@style/TextBody2Style.night</item>
+        <item name="checkboxStyle">@style/CheckBoxStyle</item>
     </style>
 </resources>
