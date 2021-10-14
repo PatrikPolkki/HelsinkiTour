@@ -176,7 +176,7 @@ fun bindHours(view: TextView, item: Helsinki?) {
         opens = it.opens?.dropLast(3)
         closes = it.closes?.dropLast(3)
 
-        text += "•    " + getWeekday(it.weekdayId, context) + ": "
+        text += "    •    " + getWeekday(it.weekdayId, context) + ": "
         text += when {
             // Closed
             opens == null && closes == null && !it.open24h ->

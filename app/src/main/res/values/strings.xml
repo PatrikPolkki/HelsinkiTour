@@ -48,6 +48,8 @@
     <string name="steps_title">Total Steps</string>
     <string name="distance_title">Total Distance</string>
     <string name="add_name_hint">Add name</string>
+    <string name="dot" translatable="false">•</string>
+    <string name="profile_image">Profile Image</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="add_image">Add image</string>

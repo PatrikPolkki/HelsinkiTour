@@ -26,6 +26,7 @@
         <item name="textAppearanceBody1">@style/TextBody1Style.day</item>
         <item name="textAppearanceBody2">@style/TextBody2Style.day</item>
         <item name="checkboxStyle">@style/CheckBoxStyle</item>
+        <item name="listDividerAlertDialog">@style/dividerView</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 </resources>
