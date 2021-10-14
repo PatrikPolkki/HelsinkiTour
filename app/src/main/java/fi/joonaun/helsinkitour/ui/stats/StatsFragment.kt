@@ -115,6 +115,11 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * open profile editing mode
+     * hides textview and makes edittext visible
+     * closing editing mode send new name to viewmodel
+     */
     private fun editProfile(): Boolean {
         return if (!editProfileBoolean) {
             binding.username.visibility = View.GONE
@@ -136,6 +141,10 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
+    /**
+     * open alert where to choose
+     * add image from gallery or take photo
+     */
     private fun addImage() {
         if (editProfileBoolean) {
             val builder = AlertDialog.Builder(context ?: return)
@@ -153,10 +162,16 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
+    /**
+     * launch openGallery
+     */
     private fun galleryImage() {
         openGallery.launch("image/*")
     }
 
+    /**
+     * get image from gallery
+     */
     private val openGallery = registerForActivityResult(ActivityResultContracts.GetContent()) {
         it ?: return@registerForActivityResult
         val bitmap: Bitmap?
@@ -172,6 +187,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     }
 
+    /**
+     * ask permissions
+     */
     private val cameraPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
@@ -194,6 +212,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
+    /**
+     * take photo
+     */
     private fun takePhoto() {
         val fileName = "profile_photo"
         val imgPath = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -209,6 +230,10 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
             takePicture.launch(photoURI)
     }
 
+    /**
+     * turn image if its sideways
+     * set photo to imageview
+     */
     private var takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
             var bitmap = BitmapFactory.decodeFile(takePhotoPath)
@@ -242,6 +267,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
+    /**
+     * convert bitmap to bytearray
+     */
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -249,6 +277,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         return stream.toByteArray()
     }
 
+    /**
+     * save photo to internal storage as bytearray
+     */
     private fun onSaveFile(bitmap: Bitmap) {
         try {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -264,6 +295,10 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
+    /**
+     * get fileinputstream from internal storage
+     * convert fileinputstream to bitmap
+     */
     private fun onShowFile() {
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -282,6 +317,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     }
 
+    /**
+     * save username to sharedpreferences from  [viewModel]
+     */
     private fun savePref() {
         val preferences =
             activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
@@ -291,6 +329,9 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         editor.apply()
     }
 
+    /**
+     * get username from sharedPreferences and send it to [viewModel]
+     */
     private fun getPref() {
         val preferences =
             activity?.getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE) ?: return
