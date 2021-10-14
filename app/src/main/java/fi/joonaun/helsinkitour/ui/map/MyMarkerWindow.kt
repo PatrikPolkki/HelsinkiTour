@@ -90,7 +90,8 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
     override fun onClose() {
         Log.d("ONCLOSE", "TOIMII")
         mMapView.overlays.remove(mapListener)
-        mMapView.overlays.remove(roadOverlay)
+        if (this::roadOverlay.isInitialized)
+            mMapView.overlays.remove(roadOverlay)
     }
 
     private fun readMore() {
