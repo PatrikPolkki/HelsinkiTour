@@ -15,6 +15,7 @@ import fi.joonaun.helsinkitour.MainViewModelFactory
 import fi.joonaun.helsinkitour.R
 import fi.joonaun.helsinkitour.database.AppDatabase
 import fi.joonaun.helsinkitour.databinding.FragmentInfoBinding
+import fi.joonaun.helsinkitour.network.HelsinkiRepository
 import fi.joonaun.helsinkitour.utils.HelsinkiType
 import fi.joonaun.helsinkitour.utils.NavigatorHelper
 import fi.joonaun.helsinkitour.utils.addFavouriteToDatabase
@@ -42,7 +43,10 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
         initUI()
         initAddressClickListener()
     }
-
+    /**
+     * Finds correct item from [HelsinkiRepository] based on argument "type" and "id".
+     * Sets favorite observer and button OnClickListener
+     */
     private fun initUI() {
         val id = args.id
         Log.d("ARGS", args.type.toString())

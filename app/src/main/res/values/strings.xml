@@ -44,7 +44,7 @@
     <string name="show">Show</string>
     <string name="do_you_want_open_gps">Do you want open location setting?</string>
     <string name="gps_not_enabled">GPS is not enabled</string>
-    <string name="distance" translatable="false">%d</string>
+    <string name="distance" translatable="false">%.2f km</string>
     <string name="steps_title">Total Steps</string>
     <string name="distance_title">Total Distance</string>
     <string name="add_name_hint">Add name</string>

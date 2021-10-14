@@ -203,7 +203,8 @@ fun bindTotalSteps(view: TextView, steps: Int?) {
  */
 @BindingAdapter("totalDistance")
 fun bindTotalDistance(view: TextView, distance: Int?) {
-    val text = view.context.getString(R.string.distance, distance ?: 0)
+    val km = distance?.toFloat()?.div(1000) ?: 0.0f
+    val text = view.context.getString(R.string.distance, km)
     view.text = text
 }
 
