@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.HelsinkiTour" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.HelsinkiTour" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
@@ -26,5 +26,6 @@
         <item name="textAppearanceBody1">@style/TextBody1Style.day</item>
         <item name="textAppearanceBody2">@style/TextBody2Style.day</item>
         <item name="checkboxStyle">@style/CheckBoxStyle</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 </resources>

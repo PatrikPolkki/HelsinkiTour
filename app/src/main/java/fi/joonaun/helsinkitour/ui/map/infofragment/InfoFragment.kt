@@ -54,7 +54,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
         val item = list.value?.find { it.id == id } ?: return
         binding.helsinkiItem = item
 
-        val db = AppDatabase.get(requireContext()).favoriteDao()
+        val db = AppDatabase.get(context ?: return).favoriteDao()
         val favourite = db.get(args.id)
 
         favourite.observe(viewLifecycleOwner) { fav ->
@@ -77,7 +77,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
 
     private fun initAddressClickListener() {
         binding.btnShowOnMap.setOnClickListener {
-            NavigatorHelper(requireContext(), findNavController())
+            NavigatorHelper(context ?: return@setOnClickListener, findNavController())
                 .showMapDialog(binding.helsinkiItem ?: return@setOnClickListener)
         }
     }
