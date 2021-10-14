@@ -24,7 +24,7 @@
     <string name="favorite">Suosikki</string>
     <string name="favorites">Suosikit</string>
     <string name="showOnMap">Näytä kartalla</string>
-    <string name="user_location_fab">Käyttäjän sijainti painike</string>
+    <string name="user_location_fab">Käyttäjän sijainti</string>
     <string name="marker_window_read_more_btn">Lue lisää</string>
     <string name="marker_window_address">Osoite</string>
     <string name="what_map">Mitä haluat tehdä?</string>
