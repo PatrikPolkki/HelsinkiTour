@@ -30,7 +30,7 @@ class InfoBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ModalSheetInfoBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         initUI()

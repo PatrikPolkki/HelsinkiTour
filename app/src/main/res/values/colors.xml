@@ -22,4 +22,5 @@
     <color name="place_marker">#FFEB3B</color>
     <color name="cluster_marker">#0090F1</color>
     <color name="cluster_stroke">#A62196F3</color>
+    <color name="divider">#D5D2D2</color>
 </resources>

@@ -35,4 +35,5 @@
     <string name="steps_title">Askeleet</string>
     <string name="distance_title">Kuljettu matka</string>
     <string name="add_name_hint">Lisää nimi</string>
+    <string name="profile_image">Profiilikuva</string>
 </resources>

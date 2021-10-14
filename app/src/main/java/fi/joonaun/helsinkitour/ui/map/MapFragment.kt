@@ -44,6 +44,7 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
 
@@ -170,7 +171,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 LocationManager.GPS_PROVIDER
             )
         ) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5f, this)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1f, this)
         }
     }
 
@@ -186,8 +187,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private val distanceObserver = Observer<Location?> { vmLocation ->
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
-            Log.d("DISTANCE", distance.toString())
-            viewModel.insertDistance(distance.roundToInt(), getTodayDate())
+            Log.d("DISTANCE", floor(distance).toInt().toString())
+            viewModel.insertDistance(floor(distance).toInt(), getTodayDate())
         }
         locDistance = vmLocation
     }
