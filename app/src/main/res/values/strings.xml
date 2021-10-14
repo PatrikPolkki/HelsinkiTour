@@ -33,7 +33,7 @@
     <string name="closed">Closed</string>
     <string name="open_24">Open 24h</string>
     <string name="favorite">Favorite</string>
-    <string name="step_count">Total steps: %d</string>
+    <string name="step_count" translatable="false">%d</string>
     <string name="favorites">Favorites</string>
     <string name="showOnMap">Show on map</string>
 
@@ -45,4 +45,8 @@
     <string name="what_map">What you wanna do?</string>
     <string name="navigate">Navigate</string>
     <string name="show">Show</string>
+    <string name="distance" translatable="false">%d</string>
+    <string name="steps_title">Total Steps</string>
+    <string name="distance_title">Total Distance</string>
+    <string name="add_name_hint">Add name</string>
 </resources>

@@ -22,4 +22,7 @@ interface StatDao {
 
     @Query("SELECT SUM(steps) FROM stat")
     fun getTotalSteps(): LiveData<Int?>
+
+    @Query("SELECT SUM(distance_travelled) FROM stat")
+    fun getTotalDistance(): LiveData<Int?>
 }

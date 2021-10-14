@@ -3,13 +3,11 @@ package fi.joonaun.helsinkitour.ui.stats
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -18,6 +16,7 @@ import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -44,7 +43,7 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     private var editProfileBoolean = false
     private lateinit var takePhotoPath: String
-    private val FILENAME = "profile.jpg"
+    private val filename = "profile.jpg"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,100 +104,69 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menuEditProfile -> editProfile()
+            R.id.menuEditProfile -> {
+                if (editProfile()) {
+                    item.title = "SAVE"
+                } else {
+                    item.title = "EDIT"
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
+    private fun editProfile(): Boolean {
+        return if (!editProfileBoolean) {
+            binding.username.visibility = View.GONE
+            binding.usernameEditText.visibility = View.VISIBLE
+            editProfileBoolean = true
+            true
+        } else {
+            binding.username.visibility = View.VISIBLE
+            binding.usernameEditText.visibility = View.GONE
+            viewModel.setUsername(binding.usernameEditText.text.toString())
+            editProfileBoolean = false
+            false
+        }
+    }
+
+
     private fun addImage() {
         if (editProfileBoolean) {
             val builder = AlertDialog.Builder(requireContext())
-            builder.setMessage("Add Image")
-                .setPositiveButton("Gallery", DialogInterface.OnClickListener { dialog, id ->
-                    Log.d("GALLERY", "WORKS")
+            builder.apply {
+                builder.setMessage("Add Image")
+                setPositiveButton("Gallery") { _, _ ->
                     galleryImage()
-                })
-                .setNegativeButton("Take Photo", DialogInterface.OnClickListener { dialog, id ->
-                    Log.d("TAKE PHOTO", "WORKS")
+                }
+                setNegativeButton("Take Photo") { _, _ ->
                     takePhoto()
-                })
-            // Create the AlertDialog object and return it
+                }
+            }
             builder.create()
             builder.show()
         }
     }
 
     private fun galleryImage() {
-        startForResult.launch("image/*")
+        openGallery.launch("image/*")
     }
 
-    private val startForResult = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    private val openGallery = registerForActivityResult(ActivityResultContracts.GetContent()) {
         it ?: return@registerForActivityResult
-        var bitmap: Bitmap? = null
+        val bitmap: Bitmap?
         val contentResolver = requireContext().contentResolver
         try {
             val source = ImageDecoder.createSource(contentResolver, it)
             bitmap = ImageDecoder.decodeBitmap(source)
             binding.userImageView.setImageBitmap(bitmap)
+            onSaveFile(bitmap)
         } catch (e: Exception) {
             Log.e("ERROR", e.toString())
         }
 
     }
 
-    private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
-
-        return stream.toByteArray()
-    }
-
-    private fun byteArrayToBitmap(byteArray: ByteArray): Bitmap? {
-        return try {
-            BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun onSaveFile(bitmap: Bitmap) {
-        try {
-            if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-                lifecycleScope.launch(Dispatchers.Default) {
-                    val file =
-                        File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME)
-                    file.appendBytes(bitmapToByteArray(bitmap))
-
-//                    requireContext().openFileOutput(FILENAME, Context.MODE_APPEND).use {
-//                        it.write(bitmapToByteArray(bitmap))
-//                    }
-                    Log.d("TOIMI", "TOIMI")
-                }
-            }
-        } catch (e: Exception) {
-
-        }
-    }
-
-    private fun onShowFile() {
-        if (Environment.getExternalStorageState() in setOf(
-                Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY
-            )
-        ) {
-            lifecycleScope.launch(Dispatchers.Default) {
-                try {
-                    val file =
-                        File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME)
-                    val bitmap = byteArrayToBitmap(file.readBytes())
-                    withContext(Dispatchers.Main) {
-                        binding.userImageView.setImageBitmap(bitmap)
-                    }
-                } catch (e: Exception) {
-                    Log.e("ERROR", e.toString())
-                }
-            }
-        }
-    }
 
     private fun takePhoto() {
         if (ContextCompat.checkSelfPermission(
@@ -230,13 +198,13 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
 
             when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)) {
                 6 -> {
-                    matrix.postRotate(90F);
+                    matrix.postRotate(90F)
                 }
                 3 -> {
-                    matrix.postRotate(180F);
+                    matrix.postRotate(180F)
                 }
                 8 -> {
-                    matrix.postRotate(270F);
+                    matrix.postRotate(270F)
                 }
             }
 
@@ -254,17 +222,44 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
         }
     }
 
-    private fun editProfile() {
-        if (!editProfileBoolean) {
-            binding.username.visibility = View.GONE
-            binding.usernameEditText.visibility = View.VISIBLE
-            editProfileBoolean = true
-        } else {
-            binding.username.visibility = View.VISIBLE
-            binding.usernameEditText.visibility = View.GONE
-            viewModel.setUsername(binding.usernameEditText.text.toString())
-            editProfileBoolean = false
+    private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+
+        return stream.toByteArray()
+    }
+
+    private fun onSaveFile(bitmap: Bitmap) {
+        try {
+            lifecycleScope.launch(Dispatchers.IO) {
+                requireContext().openFileOutput(filename, Context.MODE_PRIVATE).use {
+                    it.write(bitmapToByteArray(bitmap))
+                    Log.d("FILE", it.toString())
+                }
+                Log.d("TOIMI", "TOIMI")
+            }
+
+        } catch (e: Exception) {
+            Log.e("ERROR", e.toString())
         }
+    }
+
+    private fun onShowFile() {
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val imageStream = requireContext().openFileInput(filename)
+                val bitmap = BitmapFactory.decodeStream(imageStream)
+
+                withContext(Dispatchers.Main) {
+                    binding.userImageView.setImageBitmap(bitmap)
+                }
+            } catch (e: Exception) {
+                Log.e("ERROR", e.toString())
+            }
+        }
+
+
     }
 
     private fun savePref() {
