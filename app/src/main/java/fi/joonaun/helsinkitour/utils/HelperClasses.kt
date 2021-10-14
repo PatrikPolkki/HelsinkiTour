@@ -48,6 +48,9 @@ fun getTodayDate(): String {
     return formatter.format(today)
 }
 
+/**
+ * Insert [helsinkiItem] to database
+ */
 suspend fun addFavouriteToDatabase(helsinkiItem: Helsinki?, dao: FavoriteDao) {
     helsinkiItem?.let {
         val item = makeFavoriteItem(it) ?: return
@@ -56,6 +59,9 @@ suspend fun addFavouriteToDatabase(helsinkiItem: Helsinki?, dao: FavoriteDao) {
     }
 }
 
+/**
+ * Deletes [helsinkiItem] from database
+ */
 suspend fun deleteFavoriteFromDatabase(helsinkiItem: Helsinki?, dao: FavoriteDao) {
     helsinkiItem?.let {
         val item = makeFavoriteItem(it) ?: return

@@ -12,6 +12,9 @@ import fi.joonaun.helsinkitour.network.Helsinki
 import org.osmdroid.util.BoundingBox
 
 class NavigatorHelper(private val context: Context, private val navController: NavController) {
+    /**
+     * Navigates to map fragment and centers view to [item] location
+     */
     private fun showOnMap(item: Helsinki) {
         val north = item.location.lat
         val south = item.location.lat
@@ -29,6 +32,9 @@ class NavigatorHelper(private val context: Context, private val navController: N
         navController.navigate(R.id.navMap, bundle)
     }
 
+    /**
+     * Open Google Maps and show directions to [item]s location
+     */
     private fun navigate(item: Helsinki) {
         try {
             val uri = Uri.parse(
@@ -43,6 +49,9 @@ class NavigatorHelper(private val context: Context, private val navController: N
         }
     }
 
+    /**
+     * Show dialog which asks do user want to navigate or show item on map
+     */
     fun showMapDialog(item: Helsinki) {
         AlertDialog.Builder(context).apply {
             setTitle(R.string.what_map)

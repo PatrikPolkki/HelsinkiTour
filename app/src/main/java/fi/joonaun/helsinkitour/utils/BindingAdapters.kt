@@ -148,6 +148,9 @@ fun bindAddress(view: TextView, address: Address?) {
     )
 }
 
+/**
+ * Bind [address] to [view] text value
+ */
 @BindingAdapter("marker_address")
 fun bindMarkerAddress(view: TextView, address: Address?) {
     address ?: return
@@ -212,6 +215,9 @@ fun bindTotalDistance(view: TextView, distance: Int?) {
     view.text = text
 }
 
+/**
+ * Bind [images] to [view]
+ */
 @BindingAdapter("imageSliderImages")
 fun bindImageSliderImages(view: ImageSlider, images: List<Image>?) {
     val imageList: MutableList<SlideModel> = mutableListOf()
