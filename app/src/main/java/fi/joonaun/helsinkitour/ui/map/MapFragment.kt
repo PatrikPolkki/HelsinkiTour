@@ -186,7 +186,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
     private val distanceObserver = Observer<Location?> { vmLocation ->
         locDistance?.let {
             val distance = vmLocation.distanceTo(it)
-            // Log.d("DISTANCE", distance.toString())
+            Log.d("DISTANCE", distance.toString())
             viewModel.insertDistance(distance.roundToInt(), getTodayDate())
         }
         locDistance = vmLocation
@@ -284,7 +284,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener,
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_circle_24)
 
             val density = requireContext().resources.displayMetrics.density
-            val iconSize = (60 * density).roundToInt()
+            val iconSize = (50 * density).roundToInt()
 
             allMarkers.setIcon(drawable?.toBitmap(iconSize, iconSize))
             allMarkers.setRadius(iconSize)
