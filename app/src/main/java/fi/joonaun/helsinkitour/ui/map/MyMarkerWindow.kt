@@ -38,6 +38,9 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
     private lateinit var roadOverlay: Polyline
     private lateinit var selectedMarker: RelatedObj
 
+    /**
+     * close markerwindow by clicking map
+     */
     private val mapListener = MapEventsOverlay(object : MapEventsReceiver {
         override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
             close()
@@ -94,6 +97,9 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
             mMapView.overlays.remove(roadOverlay)
     }
 
+    /**
+     * navigates to infoFragments and pass enum and helsinki item id
+     */
     private fun readMore() {
         val type = when (selectedMarker.helsinki) {
             is Event -> HelsinkiType.EVENT
@@ -106,6 +112,10 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
         mView.findNavController().navigate(action)
     }
 
+    /**
+     * add OSMBonuspack polyline
+     * from userLocation and marker location
+     */
     private fun addPolyline() {
         val roadManager: RoadManager = OSRMRoadManager(mView.context, "MY_USER_AGENT")
         val wayPoints: ArrayList<GeoPoint> = ArrayList()
@@ -130,6 +140,9 @@ class MyMarkerWindow(mapView: MapView, private val onMarkerClickListener: Marker
         }
     }
 
+    /**
+     * observe favourites
+     */
     private fun favourites() {
 
         val db = AppDatabase.get(mView.context).favoriteDao()
