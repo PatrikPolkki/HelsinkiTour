@@ -39,14 +39,6 @@ fun bindShowImageOrPlaceholder(view: ImageView, image: String?, imageList: List<
 }
 
 /**
- * Load [url] to [view]
- */
-@BindingAdapter("imageUrl")
-fun bindShowImage(view: ImageView, url: String) {
-    loadSmallImage(view, url)
-}
-
-/**
  * If [item] is [Event] then show event dates on [view]
  */
 @BindingAdapter("eventDates")
