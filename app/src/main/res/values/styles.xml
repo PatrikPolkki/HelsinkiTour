@@ -80,7 +80,8 @@
         <item name="materialThemeOverlay">@style/FabThemeOverlay</item>
     </style>
     <style name="FabThemeOverlay">
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSecondary">@color/primary</item>
+        <item name="colorSecondary">@color/fab_background</item>
     </style>
 
     <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
