@@ -176,6 +176,8 @@ class StatsFragment : Fragment(R.layout.fragment_stats),
     private fun askCameraPermission() {
         val camPerm = Manifest.permission.CAMERA
 
+        val pm = activity?.packageManager ?: return
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) return
 
         context?.let {
             when (PackageManager.PERMISSION_GRANTED) {
