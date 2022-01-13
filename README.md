@@ -9,3 +9,7 @@ Download and install. No API keys required to use
 In Android Studio go to Build -> Build Bundle(s) / APK(s) -> Build APK(s).
 
 Then copy APK to phone and install it.
+
+## UI
+
+<img src="https://cdn.discordapp.com/attachments/760467389014867978/931158319438110720/Screenshot_20220113-140752.png" width="250">
